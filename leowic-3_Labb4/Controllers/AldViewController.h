@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AldViewController : UIViewController
+@interface AldViewController : UIViewController<UIScrollViewDelegate>
+
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) UIView *subview;
 
 @end

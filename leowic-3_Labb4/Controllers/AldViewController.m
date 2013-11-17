@@ -13,11 +13,22 @@
 -(void) viewDidLoad
 {
     [super viewDidLoad];
+    
+    UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://apod.nasa.gov/apod/image/1102/rosette_lula_1700.jpg"]]];
+    
+    UIImageView *subview = [[UIImageView alloc] initWithImage:image];
+
+    _scrollView.autoresizesSubviews = NO;
+    _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    [_scrollView addSubview:subview];
+    _scrollView.contentSize = image.size;
+    _scrollView.maximumZoomScale = 4;
+    _scrollView.minimumZoomScale = 1;
 }
 
--(void) didReceiveMemoryWarning
+-(UIView *) viewForZoomingInScrollView: (UIScrollView *)scrollView
 {
-    [super didReceiveMemoryWarning];
+    return [scrollView.subviews objectAtIndex:0];
 }
 
 @end
