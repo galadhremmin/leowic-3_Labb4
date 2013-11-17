@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AldCardView : NSObject
+@interface AldCardSideViewContainer : NSObject
 
 +(NSUInteger) cardSquareSize;
 
@@ -18,5 +18,6 @@
 
 -(id)      initWithIndex: (NSUInteger)index;
 -(UIView*) oppositeView: (UIView *)view;
+-(void)    flipFromView: (UIView *)view configureDestinationView: (void (^)(UIView *destinationView))configureDestinationViewHandler completed: (void (^)(UIView *previousView, UIView *destinationView))completedHandler;
 
 @end

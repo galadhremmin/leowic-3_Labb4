@@ -17,11 +17,11 @@
 
 @implementation AldCardSideView
 
--(id) initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardView *)card
+-(id) initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSideViewContainer *)card
 {
-    self = [super initWithFrame:CGRectMake(origin.x, origin.y, [AldCardView cardSquareSize], [AldCardView cardSquareSize])];
+    self = [super initWithFrame:CGRectMake(origin.x, origin.y, [AldCardSideViewContainer cardSquareSize], [AldCardSideViewContainer cardSquareSize])];
     if (self) {
-        _belongsToCard = card;
+        _parentCard = card;
         [self setUserInteractionEnabled:YES];
         
         [self initStyles];
@@ -45,7 +45,7 @@
     CAShapeLayer *maskLayer = [CAShapeLayer layer];
     maskLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.bounds
                                            byRoundingCorners:UIRectCornerAllCorners
-                                                 cornerRadii: CGSizeMake(r, r)].CGPath;
+                                                 cornerRadii:CGSizeMake(r, r)].CGPath;
     
     self.layer.mask = maskLayer;
 }

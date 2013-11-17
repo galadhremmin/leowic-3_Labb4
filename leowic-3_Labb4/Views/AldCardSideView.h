@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "AldCardView.h"
+#import "AldCardSideViewContainer.h"
 
 @interface AldCardSideView : UIImageView
 
-@property(nonatomic, weak) AldCardView *belongsToCard;
+@property(nonatomic, weak) AldCardSideViewContainer *parentCard;
 
--(id)   initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardView *)card;
+-(id)   initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSideViewContainer *)card;
 -(void) initStyles;
 -(void) initContents;
 

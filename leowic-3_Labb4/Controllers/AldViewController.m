@@ -8,12 +8,12 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import "AldViewController.h"
-#import "AldCardView.h"
-#import "AldCardSideView.h"
+#import "AldCardBackView.h"
 
 @interface AldViewController()
 
 @property(nonatomic, strong) NSMutableArray *cards;
+@property(nonatomic)         BOOL            isFlipping;
 
 @end
 
@@ -38,20 +38,37 @@
 
 -(void) configure
 {
-    _model = [[AldGameModel alloc] initWithVariants:9];
-    _cards = [[NSMutableArray alloc] initWithCapacity:9];
+    _model = [[AldGameModel alloc] initWithVariants:16];
     
-    CGRect mapFrame = CGRectMake(0, 0, _model.mapSize * [AldCardView cardSquareSize], _model.mapSize * [AldCardView cardSquareSize]);
+    // Map size (in number of cards per row)
+    int cardsPerRow = _model.mapSize;
+    
+    // Number of cards in total (cardsPerRow^2)
+    int numberOfCards = cardsPerRow * cardsPerRow;
+    
+    // Card width and height
+    int cardSize = [AldCardSideViewContainer cardSquareSize];
+ 
+    // Padding width (5 % of card width)
+    int paddingSize = cardSize * 0.05;
+    
+    CGRect mapFrame = CGRectMake(
+                                 0, 0,
+                                 cardsPerRow * cardSize + (paddingSize * (cardsPerRow - 1)),
+                                 cardsPerRow * cardSize + (paddingSize * (cardsPerRow - 1))
+                                 );
+    
     UIView *mapView = [[UIView alloc] initWithFrame:mapFrame];
     
-    for (int i = 0, x = 0, y = 0; i < _model.mapSize * _model.mapSize; i += 1) {
+    _cards = [[NSMutableArray alloc] initWithCapacity:numberOfCards];
+    for (int i = 0, x = 0, y = 0; i < numberOfCards; i += 1) {
         
         // Create a card with a front and back side
-        AldCardView *card = [[AldCardView alloc] initWithIndex:i];
+        AldCardSideViewContainer *card = [[AldCardSideViewContainer alloc] initWithIndex:i];
         
         // Create a rotation view wherein the cards will rotate. This is necessary because the UIView
         // transition kit rotates the parent view as well.
-        CGRect frame = CGRectMake(x, y, card.frontView.frame.size.width, card.frontView.frame.size.height);
+        CGRect frame = CGRectMake(x, y, cardSize, cardSize);
         UIView *rotationView = [[UIView alloc] initWithFrame:frame];
         
         // Store the card so that it will be retained, and add the card's front view to the rotation view, which
@@ -66,11 +83,11 @@
 #endif
         
         // Increment X and Y. The map being a perfect square, Y is incremented with even division.
-        if (i > 0 && (i + 1) % _model.mapSize == 0) {
+        if (i > 0 && (i + 1) % cardsPerRow == 0) {
             x = 0;
-            y += [AldCardView cardSquareSize];
+            y += [AldCardSideViewContainer cardSquareSize] + paddingSize;
         } else {
-            x += [AldCardView cardSquareSize];
+            x += [AldCardSideViewContainer cardSquareSize] + paddingSize;
         }
     }
     
@@ -99,24 +116,66 @@
 
 -(void) handleDoubleTap: (UITapGestureRecognizer *)sender
 {
+    // You can't flip another set of card if cards are already flipping
+    if (_isFlipping == YES) {
+        return;
+    }
+    
     if (sender.state != UIGestureRecognizerStateEnded) {
         return;
     }
     
+    // Fetch the subview (to the UIScrollView) at the coordinates where the client double tapped
     CGPoint coords = [sender locationInView:_scrollView];
     UIView *view = [_scrollView hitTest:coords withEvent:nil];
     
-    if (view != nil) {
-
-        AldCardView *card = [(AldCardSideView *)view belongsToCard];
-        
-        [UIView transitionFromView:view
-                            toView:[card oppositeView:view]
-                          duration:5
-                           options:UIViewAnimationOptionTransitionFlipFromLeft
-                        completion:nil];
-        
+    if (view == nil || ![view isKindOfClass:[AldCardSideView class]]) {
+        return;
     }
+    
+    AldCardSideView *cardView = (AldCardSideView *)view;
+    
+    // Save the selection of the first card
+    if (_selectedCardView == nil || cardView == _selectedCardView) {
+        _selectedCardView = cardView;
+        return;
+    }
+    
+    // A card has already been selected, so move on and flip both
+    NSArray *cards = @[_selectedCardView, cardView];
+    
+    BOOL matches = [_model variationForIndex:_selectedCardView.parentCard.index] == [_model variationForIndex:cardView.parentCard.index];
+    
+    for (AldCardSideView *cardView in cards) {
+        __weak AldCardSideViewContainer* card = cardView.parentCard;
+        
+        [card flipFromView:cardView configureDestinationView:^(UIView *view) {
+            // Skip the front of the card as it has nothing to configure
+            if (![view isKindOfClass:[AldCardBackView class]]) {
+                return;
+            }
+            
+            // Populate the back of the card with its variation
+            AldCardBackView *cardView = (AldCardBackView *) view;
+            int index = cardView.parentCard.index;
+            
+            // Temporary: assign the variation as the textual content for thed details label
+            NSString *title = [NSString stringWithFormat:@"%d", [_model variationForIndex:index]];
+            cardView.detailsTitleLabel.text = title;
+        } completed:^(UIView *sourceView, UIView* destinationView) {
+            if (!matches) {
+                // The two cards doesn't match--so flip right back.
+                [card flipFromView:destinationView configureDestinationView:nil completed:^(UIView *sourceView, UIView* destinationView) {
+                    _isFlipping = NO;
+                }];
+            } else {
+                _isFlipping = NO;
+            }
+        }];
+    }
+    
+    _selectedCardView = nil;
+    _isFlipping = YES;
 }
 
 @end
