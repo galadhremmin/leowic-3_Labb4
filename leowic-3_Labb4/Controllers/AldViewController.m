@@ -47,7 +47,7 @@
     int numberOfCards = cardsPerRow * cardsPerRow;
     
     // Card width and height
-    int cardSize = [AldCardSideViewContainer cardSquareSize];
+    int cardSize = [AldCardSidesViewContainer cardSquareSize];
  
     // Padding width (5 % of card width)
     int paddingSize = cardSize * 0.05;
@@ -64,7 +64,7 @@
     for (int i = 0, x = 0, y = 0; i < numberOfCards; i += 1) {
         
         // Create a card with a front and back side
-        AldCardSideViewContainer *card = [[AldCardSideViewContainer alloc] initWithIndex:i];
+        AldCardSidesViewContainer *card = [[AldCardSidesViewContainer alloc] initWithIndex:i];
         
         // Create a rotation view wherein the cards will rotate. This is necessary because the UIView
         // transition kit rotates the parent view as well.
@@ -85,9 +85,9 @@
         // Increment X and Y. The map being a perfect square, Y is incremented with even division.
         if (i > 0 && (i + 1) % cardsPerRow == 0) {
             x = 0;
-            y += [AldCardSideViewContainer cardSquareSize] + paddingSize;
+            y += [AldCardSidesViewContainer cardSquareSize] + paddingSize;
         } else {
-            x += [AldCardSideViewContainer cardSquareSize] + paddingSize;
+            x += [AldCardSidesViewContainer cardSquareSize] + paddingSize;
         }
     }
     
@@ -142,30 +142,30 @@
     }
     
     // A card has already been selected, so move on and flip both
-    NSArray *cards = @[_selectedCardView, cardView];
+    NSArray *cardSideViews = @[_selectedCardView, cardView];
     
-    BOOL matches = [_model variationForIndex:_selectedCardView.parentCard.index] == [_model variationForIndex:cardView.parentCard.index];
+    BOOL matches = [_model variationForIndex:_selectedCardView.associatedCard.index] == [_model variationForIndex:cardView.associatedCard.index];
     
-    for (AldCardSideView *cardView in cards) {
-        __weak AldCardSideViewContainer* card = cardView.parentCard;
+    for (AldCardSideView *cardSideView in cardSideViews) {
+        __weak AldCardSidesViewContainer* card = cardSideView.associatedCard;
         
-        [card flipFromView:cardView configureDestinationView:^(UIView *view) {
+        [card flipFromView:cardSideView configureDestinationView:^(UIView *view) {
             // Skip the front of the card as it has nothing to configure
             if (![view isKindOfClass:[AldCardBackView class]]) {
                 return;
             }
             
             // Populate the back of the card with its variation
-            AldCardBackView *cardView = (AldCardBackView *) view;
-            int index = cardView.parentCard.index;
+            AldCardBackView *cardBackSideView = (AldCardBackView *) view;
+            int index = cardBackSideView.associatedCard.index;
             
             // Temporary: assign the variation as the textual content for thed details label
             NSString *title = [NSString stringWithFormat:@"%d", [_model variationForIndex:index]];
-            cardView.detailsTitleLabel.text = title;
+            cardBackSideView.detailsTitleLabel.text = title;
         } completed:^(UIView *sourceView, UIView* destinationView) {
             if (!matches) {
                 // The two cards doesn't match--so flip right back.
-                [card flipFromView:destinationView configureDestinationView:nil completed:^(UIView *sourceView, UIView* destinationView) {
+                [card flipFromView:destinationView configureDestinationView:nil completed:^(UIView *s, UIView* d) {
                     _isFlipping = NO;
                 }];
             } else {

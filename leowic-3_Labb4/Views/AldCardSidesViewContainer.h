@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AldCardSideViewContainer : NSObject
+@interface AldCardSidesViewContainer : NSObject
 
 +(NSUInteger) cardSquareSize;
 

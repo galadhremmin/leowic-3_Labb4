@@ -17,7 +17,7 @@
     self.image = image;
     
     UILabel *label = [[UILabel alloc] initWithFrame:self.frame];
-    label.text = [NSString stringWithFormat:@"%d", self.parentCard.index];
+    label.text = [NSString stringWithFormat:@"%d", self.associatedCard.index];
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
     

@@ -17,11 +17,11 @@
 
 @implementation AldCardSideView
 
--(id) initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSideViewContainer *)card
+-(id) initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSidesViewContainer *)card
 {
-    self = [super initWithFrame:CGRectMake(origin.x, origin.y, [AldCardSideViewContainer cardSquareSize], [AldCardSideViewContainer cardSquareSize])];
+    self = [super initWithFrame:CGRectMake(origin.x, origin.y, [AldCardSidesViewContainer cardSquareSize], [AldCardSidesViewContainer cardSquareSize])];
     if (self) {
-        _parentCard = card;
+        _associatedCard = card;
         [self setUserInteractionEnabled:YES];
         
         [self initStyles];

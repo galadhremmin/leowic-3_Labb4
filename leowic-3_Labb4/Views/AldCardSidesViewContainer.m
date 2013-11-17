@@ -6,18 +6,18 @@
 //  Copyright (c) 2013 LTU. All rights reserved.
 //
 
-#import "AldCardSideViewContainer.h"
+#import "AldCardSidesViewContainer.h"
 #import "AldCardFrontView.h"
 #import "AldCardBackView.h"
 
-@interface AldCardSideViewContainer()
+@interface AldCardSidesViewContainer()
 
 @property(nonatomic, strong) UIView *frontView;
 @property(nonatomic, strong) UIView *backView;
 
 @end
 
-@implementation AldCardSideViewContainer
+@implementation AldCardSidesViewContainer
 
 +(NSUInteger) cardSquareSize
 {

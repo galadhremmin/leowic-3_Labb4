@@ -25,7 +25,7 @@
 		D7C3B2521838FA710013DD81 /* AldCardFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B2511838FA710013DD81 /* AldCardFrontView.m */; };
 		D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B25418390D1E0013DD81 /* AldCardBackView.m */; };
 		D7C3B25A183910DC0013DD81 /* UIImage+BundleExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B259183910DC0013DD81 /* UIImage+BundleExtensions.m */; };
-		D7C3B261183913930013DD81 /* AldCardSideViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B260183913930013DD81 /* AldCardSideViewContainer.m */; };
+		D7C3B261183913930013DD81 /* AldCardSidesViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B260183913930013DD81 /* AldCardSidesViewContainer.m */; };
 		D7C3B26418391A380013DD81 /* AldCardSideView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B26318391A380013DD81 /* AldCardSideView.m */; };
 		D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B266183936CB0013DD81 /* back-texture.jpg */; };
 		D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B267183936CB0013DD81 /* front-texture.jpg */; };
@@ -69,8 +69,8 @@
 		D7C3B25418390D1E0013DD81 /* AldCardBackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardBackView.m; sourceTree = "<group>"; };
 		D7C3B258183910DC0013DD81 /* UIImage+BundleExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+BundleExtensions.h"; sourceTree = "<group>"; };
 		D7C3B259183910DC0013DD81 /* UIImage+BundleExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+BundleExtensions.m"; sourceTree = "<group>"; };
-		D7C3B25F183913930013DD81 /* AldCardSideViewContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardSideViewContainer.h; sourceTree = "<group>"; };
-		D7C3B260183913930013DD81 /* AldCardSideViewContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardSideViewContainer.m; sourceTree = "<group>"; };
+		D7C3B25F183913930013DD81 /* AldCardSidesViewContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardSidesViewContainer.h; sourceTree = "<group>"; };
+		D7C3B260183913930013DD81 /* AldCardSidesViewContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardSidesViewContainer.m; sourceTree = "<group>"; };
 		D7C3B26218391A380013DD81 /* AldCardSideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardSideView.h; sourceTree = "<group>"; };
 		D7C3B26318391A380013DD81 /* AldCardSideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardSideView.m; sourceTree = "<group>"; };
 		D7C3B266183936CB0013DD81 /* back-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-texture.jpg"; sourceTree = "<group>"; };
@@ -204,8 +204,8 @@
 				D7C3B25418390D1E0013DD81 /* AldCardBackView.m */,
 				D7C3B26218391A380013DD81 /* AldCardSideView.h */,
 				D7C3B26318391A380013DD81 /* AldCardSideView.m */,
-				D7C3B25F183913930013DD81 /* AldCardSideViewContainer.h */,
-				D7C3B260183913930013DD81 /* AldCardSideViewContainer.m */,
+				D7C3B25F183913930013DD81 /* AldCardSidesViewContainer.h */,
+				D7C3B260183913930013DD81 /* AldCardSidesViewContainer.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -332,7 +332,7 @@
 				D7C3B25A183910DC0013DD81 /* UIImage+BundleExtensions.m in Sources */,
 				D70738B518327552007FF061 /* AldAppDelegate.m in Sources */,
 				D7C3B24B1838F0380013DD81 /* AldGameModel.m in Sources */,
-				D7C3B261183913930013DD81 /* AldCardSideViewContainer.m in Sources */,
+				D7C3B261183913930013DD81 /* AldCardSidesViewContainer.m in Sources */,
 				D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */,
 				D70738DC1832777A007FF061 /* AldViewController.m in Sources */,
 				D7C3B26418391A380013DD81 /* AldCardSideView.m in Sources */,
