@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AldGameModel.h"
 
 @interface AldViewController : UIViewController<UIScrollViewDelegate>
 
-@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
-@property (weak, nonatomic) UIView *subview;
+@property (weak, nonatomic)   IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic)   UIView                *subview;
+@property (strong, nonatomic) AldGameModel          *model;
 
 @end

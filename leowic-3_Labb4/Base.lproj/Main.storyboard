@@ -12,11 +12,11 @@
                         <viewControllerLayoutGuide type="top" id="i0V-3S-Lmg"/>
                         <viewControllerLayoutGuide type="bottom" id="IWH-Ol-6md"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="XzE-CY-WAP">
+                    <view key="view" autoresizesSubviews="NO" contentMode="scaleToFill" id="XzE-CY-WAP">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DsB-Dg-hCO">
+                            <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DsB-Dg-hCO">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <connections>
