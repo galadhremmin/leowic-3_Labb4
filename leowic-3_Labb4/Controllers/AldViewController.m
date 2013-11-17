@@ -49,7 +49,8 @@
         // Create a card with a front and back side
         AldCardView *card = [[AldCardView alloc] initWithIndex:i];
         
-        // Create a rotation view wherein the cards will rotate
+        // Create a rotation view wherein the cards will rotate. This is necessary because the UIView
+        // transition kit rotates the parent view as well.
         CGRect frame = CGRectMake(x, y, card.frontView.frame.size.width, card.frontView.frame.size.height);
         UIView *rotationView = [[UIView alloc] initWithFrame:frame];
         
@@ -60,7 +61,9 @@
         [mapView addSubview:rotationView];
         
         // Debug information
+#if DEBUG
         NSLog(@"%d: %d %d",  i, x, y);
+#endif
         
         // Increment X and Y. The map being a perfect square, Y is incremented with even division.
         if (i > 0 && (i + 1) % _model.mapSize == 0) {
@@ -80,8 +83,18 @@
     [_scrollView addSubview:mapView];
     
     _scrollView.contentSize = mapFrame.size;
-    _scrollView.maximumZoomScale = 4;
-    _scrollView.minimumZoomScale = 1;
+}
+
+-(void) viewDidAppear: (BOOL)animated
+{
+    CGRect scrollViewFrame = _scrollView.frame;
+    CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
+    CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
+    CGFloat minScale = MIN(scaleWidth, scaleHeight);
+    
+    // Calculate the content size for the scroll view
+    _scrollView.maximumZoomScale = 1;
+    _scrollView.minimumZoomScale = minScale;
 }
 
 -(void) handleDoubleTap: (UITapGestureRecognizer *)sender

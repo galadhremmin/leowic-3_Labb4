@@ -25,10 +25,10 @@
 		D7C3B2521838FA710013DD81 /* AldCardFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B2511838FA710013DD81 /* AldCardFrontView.m */; };
 		D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B25418390D1E0013DD81 /* AldCardBackView.m */; };
 		D7C3B25A183910DC0013DD81 /* UIImage+BundleExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B259183910DC0013DD81 /* UIImage+BundleExtensions.m */; };
-		D7C3B25D183911460013DD81 /* back-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B25B183911460013DD81 /* back-texture.jpg */; };
-		D7C3B25E183911460013DD81 /* front-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B25C183911460013DD81 /* front-texture.jpg */; };
 		D7C3B261183913930013DD81 /* AldCardView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B260183913930013DD81 /* AldCardView.m */; };
 		D7C3B26418391A380013DD81 /* AldCardSideView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B26318391A380013DD81 /* AldCardSideView.m */; };
+		D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B266183936CB0013DD81 /* back-texture.jpg */; };
+		D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B267183936CB0013DD81 /* front-texture.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,12 +69,12 @@
 		D7C3B25418390D1E0013DD81 /* AldCardBackView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardBackView.m; sourceTree = "<group>"; };
 		D7C3B258183910DC0013DD81 /* UIImage+BundleExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+BundleExtensions.h"; sourceTree = "<group>"; };
 		D7C3B259183910DC0013DD81 /* UIImage+BundleExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+BundleExtensions.m"; sourceTree = "<group>"; };
-		D7C3B25B183911460013DD81 /* back-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-texture.jpg"; sourceTree = "<group>"; };
-		D7C3B25C183911460013DD81 /* front-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "front-texture.jpg"; sourceTree = "<group>"; };
 		D7C3B25F183913930013DD81 /* AldCardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardView.h; sourceTree = "<group>"; };
 		D7C3B260183913930013DD81 /* AldCardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardView.m; sourceTree = "<group>"; };
 		D7C3B26218391A380013DD81 /* AldCardSideView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardSideView.h; sourceTree = "<group>"; };
 		D7C3B26318391A380013DD81 /* AldCardSideView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardSideView.m; sourceTree = "<group>"; };
+		D7C3B266183936CB0013DD81 /* back-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "back-texture.jpg"; sourceTree = "<group>"; };
+		D7C3B267183936CB0013DD81 /* front-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "front-texture.jpg"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,7 +134,7 @@
 		D70738AA18327552007FF061 /* leowic-3_Labb4 */ = {
 			isa = PBXGroup;
 			children = (
-				D7C3B25618390F770013DD81 /* Images */,
+				D7C3B265183936CB0013DD81 /* Assets */,
 				D7C3B257183910B60013DD81 /* Extensions */,
 				D70738D91832777A007FF061 /* Controllers */,
 				D7C3B2481838F0190013DD81 /* Model */,
@@ -210,15 +210,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		D7C3B25618390F770013DD81 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				D7C3B25B183911460013DD81 /* back-texture.jpg */,
-				D7C3B25C183911460013DD81 /* front-texture.jpg */,
-			);
-			path = Images;
-			sourceTree = "<group>";
-		};
 		D7C3B257183910B60013DD81 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -226,6 +217,15 @@
 				D7C3B259183910DC0013DD81 /* UIImage+BundleExtensions.m */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D7C3B265183936CB0013DD81 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				D7C3B266183936CB0013DD81 /* back-texture.jpg */,
+				D7C3B267183936CB0013DD81 /* front-texture.jpg */,
+			);
+			path = Assets;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,8 +307,8 @@
 			files = (
 				D70738BD18327552007FF061 /* Images.xcassets in Resources */,
 				D70738AF18327552007FF061 /* InfoPlist.strings in Resources */,
-				D7C3B25E183911460013DD81 /* front-texture.jpg in Resources */,
-				D7C3B25D183911460013DD81 /* back-texture.jpg in Resources */,
+				D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */,
+				D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */,
 				D70738B818327552007FF061 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
