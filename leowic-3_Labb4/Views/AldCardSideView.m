@@ -6,7 +6,9 @@
 //  Copyright (c) 2013 LTU. All rights reserved.
 //
 
+#import <QuartzCore/QuartzCore.h>
 #import "AldCardSideView.h"
+#import "UIView+Glow.h"
 
 @interface AldCardSideView ()
 
@@ -52,6 +54,16 @@
 
 -(void) initContents
 {
+}
+
+-(void) deselect
+{
+    [self stopGlowing];
+}
+
+-(void) select
+{
+    [self startGlowingWithColor:[UIColor orangeColor] intensity:0.5];
 }
 
 @end

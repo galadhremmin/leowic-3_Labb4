@@ -10,10 +10,12 @@
 #import "AldViewController.h"
 #import "AldCardBackView.h"
 
+#define kNumberOfSimultaneousCardSelections (2)
+
 @interface AldViewController()
 
 @property(nonatomic, strong) NSMutableArray *cards;
-@property(nonatomic)         BOOL            isFlipping;
+@property(nonatomic, strong) NSMutableArray *selectedCards;
 
 @end
 
@@ -23,8 +25,8 @@
 {
     [super viewDidLoad];
     
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDoubleTap:)];
-    recognizer.numberOfTapsRequired = 2;
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCardTap:)];
+    recognizer.numberOfTapsRequired = 1;
     recognizer.numberOfTouchesRequired = 1;
     [_scrollView addGestureRecognizer:recognizer];
     
@@ -114,10 +116,10 @@
     _scrollView.minimumZoomScale = minScale;
 }
 
--(void) handleDoubleTap: (UITapGestureRecognizer *)sender
+-(void) handleCardTap: (UITapGestureRecognizer *)sender
 {
     // You can't flip another set of card if cards are already flipping
-    if (_isFlipping == YES) {
+    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
         return;
     }
     
@@ -135,19 +137,38 @@
     
     AldCardSideView *cardView = (AldCardSideView *)view;
     
-    // Save the selection of the first card
-    if (_selectedCardView == nil || cardView == _selectedCardView) {
-        _selectedCardView = cardView;
-        return;
+    // Allocate a mutable array with the capacity of two cards simultaneously selected.
+    if (_selectedCards == nil) {
+        _selectedCards = [[NSMutableArray alloc] initWithCapacity:2];
     }
     
-    // A card has already been selected, so move on and flip both
-    NSArray *cardSideViews = @[_selectedCardView, cardView];
+    if ([_selectedCards count] < kNumberOfSimultaneousCardSelections) {
+        if ([_selectedCards containsObject:cardView]) {
+            // The card already exists in the collection - deselect it
+            [cardView deselect];
+            [_selectedCards removeObject:cardView];
+        } else {
+            // The card doesn't exist in the collection with selected cards. Select it.
+            [cardView select];
+            [_selectedCards addObject:cardView];
+        }
+    }
     
-    BOOL matches = [_model variationForIndex:_selectedCardView.associatedCard.index] == [_model variationForIndex:cardView.associatedCard.index];
-    
-    for (AldCardSideView *cardSideView in cardSideViews) {
+    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
+        // Flip the card after two seconds of flashing
+        [self performSelector:@selector(flipCards) withObject:nil afterDelay:2];
+    }
+}
+
+-(void) flipCards
+{
+    __block BOOL matches = [self selectedCardsVariantsMatch];
+    for (AldCardSideView *cardSideView in _selectedCards) {
+        // Deselect the card view as the animation will ensue
+        [cardSideView deselect];
+        
         __weak AldCardSidesViewContainer* card = cardSideView.associatedCard;
+        __weak NSMutableArray *selectedCards = _selectedCards;
         
         [card flipFromView:cardSideView configureDestinationView:^(UIView *view) {
             // Skip the front of the card as it has nothing to configure
@@ -166,16 +187,35 @@
             if (!matches) {
                 // The two cards doesn't match--so flip right back.
                 [card flipFromView:destinationView configureDestinationView:nil completed:^(UIView *s, UIView* d) {
-                    _isFlipping = NO;
+                    [selectedCards removeAllObjects];
                 }];
             } else {
-                _isFlipping = NO;
+                [selectedCards removeAllObjects];
             }
         }];
     }
+}
+
+-(BOOL) selectedCardsVariantsMatch
+{
+    NSUInteger variant = 0, i = 0;
     
-    _selectedCardView = nil;
-    _isFlipping = YES;
+    for (; i < [_selectedCards count]; i += 1) {
+        AldCardSideView *cardSideView = (AldCardSideView *)[_selectedCards objectAtIndex:i];
+        NSUInteger currentVariant = [_model variationForIndex:cardSideView.associatedCard.index];
+        
+        if (i < 1) {
+            // First iteration - assign to the variant variable
+            variant = currentVariant;
+        } else if (variant != currentVariant) {
+            // All subsequent iterations - compare the variant with the initial variant. If it
+            // isn't the same, the cards aren't the same.
+            return NO;
+        }
+    }
+    
+    // Two cards are expected
+    return i == kNumberOfSimultaneousCardSelections;
 }
 
 @end

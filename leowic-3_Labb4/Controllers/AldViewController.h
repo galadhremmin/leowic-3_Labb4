@@ -15,6 +15,5 @@
 @property (weak, nonatomic)   IBOutlet UIScrollView *scrollView;
 @property (weak, nonatomic)   UIView                *subview;
 @property (strong, nonatomic) AldGameModel          *model;
-@property (weak, nonatomic)   AldCardSideView       *selectedCardView;
 
 @end

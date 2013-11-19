@@ -16,5 +16,7 @@
 -(id)   initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSidesViewContainer *)card;
 -(void) initStyles;
 -(void) initContents;
+-(void) deselect;
+-(void) select;
 
 @end
