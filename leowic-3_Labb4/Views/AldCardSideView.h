@@ -13,7 +13,7 @@
 
 @property(nonatomic, weak) AldCardSidesViewContainer *associatedCard;
 
--(id)   initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSidesViewContainer *)card;
+-(id)   initWithFrame: (CGRect)frame associatedWithCard: (AldCardSidesViewContainer *)card;
 -(void) initStyles;
 -(void) initContents;
 -(void) deselect;

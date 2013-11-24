@@ -19,20 +19,13 @@
 
 @implementation AldCardSidesViewContainer
 
-+(NSUInteger) cardSquareSize
-{
-    return 200;
-}
-
--(id) initWithIndex: (NSUInteger)index
+-(id) initWithFrame: (CGRect)frame index: (NSUInteger)index
 {
     self = [super init];
     if (self) {
-        CGPoint origin = CGPointMake(0, 0);
-        
         _index = index;
-        _frontView = [[AldCardFrontView alloc] initWithOrigin:origin associatedWithCard:self];
-        _backView  = [[AldCardBackView  alloc] initWithOrigin:origin associatedWithCard:self];
+        _frontView = [[AldCardFrontView alloc] initWithFrame:frame associatedWithCard:self];
+        _backView  = [[AldCardBackView  alloc] initWithFrame:frame associatedWithCard:self];
     }
     
     return self;

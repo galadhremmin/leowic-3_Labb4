@@ -19,12 +19,13 @@
 
 @implementation AldCardSideView
 
--(id) initWithOrigin: (CGPoint)origin associatedWithCard: (AldCardSidesViewContainer *)card
+-(id) initWithFrame: (CGRect)frame associatedWithCard: (AldCardSidesViewContainer *)card
 {
-    self = [super initWithFrame:CGRectMake(origin.x, origin.y, [AldCardSidesViewContainer cardSquareSize], [AldCardSidesViewContainer cardSquareSize])];
+    self = [super initWithFrame:frame];
     if (self) {
         _associatedCard = card;
-        [self setUserInteractionEnabled:YES];
+        self.userInteractionEnabled = YES;
+        self.autoresizingMask       = UIViewAutoresizingNone;
         
         [self initStyles];
         [self initContents];

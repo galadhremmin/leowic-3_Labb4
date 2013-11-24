@@ -25,16 +25,30 @@
 {
     [super viewDidLoad];
     
-    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCardTap:)];
-    recognizer.numberOfTapsRequired = 1;
-    recognizer.numberOfTouchesRequired = 1;
-    [_scrollView addGestureRecognizer:recognizer];
+    // Create the scroll view programmatically as iOS7 storyboard layout configuration for the
+    // UIScrollView doesn't mix very well with subviews created programmatically. See reference:
+    // https://developer.apple.com/library/ios/technotes/tn2154/_index.html
+    //
+    UIScrollView *view = [[UIScrollView alloc] initWithFrame:self.view.frame];
+    [self.view addSubview:view];
+    _scrollView = view;
+    
+    // Attach a tap gesture recogniser to the UIScrollView. It'll be used to recognise user
+    // interaction for the cards.
+    //
+    UITapGestureRecognizer *recogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleCardTap:)];
+    recogniser.numberOfTapsRequired = 1;
+    recogniser.numberOfTouchesRequired = 1;
+    [_scrollView addGestureRecognizer:recogniser];
     
     [self configure];
 }
 
 -(UIView *) viewForZoomingInScrollView: (UIScrollView *)scrollView
 {
+    // Always presume that it is the first subview within the scroll view which is to
+    // be affected by zooming.
+    //
     return [scrollView.subviews objectAtIndex:0];
 }
 
@@ -49,15 +63,16 @@
     int numberOfCards = cardsPerRow * cardsPerRow;
     
     // Card width and height
-    int cardSize = [AldCardSidesViewContainer cardSquareSize];
+    int cardSize = self.view.bounds.size.height * 0.8;
  
     // Padding width (5 % of card width)
-    int paddingSize = cardSize * 0.05;
+    int paddingSize  = cardSize * 0.05;
+    int totalPadding = paddingSize * (cardsPerRow - 1);
     
     CGRect mapFrame = CGRectMake(
                                  0, 0,
-                                 cardsPerRow * cardSize + (paddingSize * (cardsPerRow - 1)),
-                                 cardsPerRow * cardSize + (paddingSize * (cardsPerRow - 1))
+                                 cardsPerRow * cardSize + totalPadding,
+                                 cardsPerRow * cardSize + totalPadding
                                  );
     
     UIView *mapView = [[UIView alloc] initWithFrame:mapFrame];
@@ -65,12 +80,15 @@
     _cards = [[NSMutableArray alloc] initWithCapacity:numberOfCards];
     for (int i = 0, x = 0, y = 0; i < numberOfCards; i += 1) {
         
+        CGRect frame = CGRectMake(0, 0, cardSize, cardSize);
+        
         // Create a card with a front and back side
-        AldCardSidesViewContainer *card = [[AldCardSidesViewContainer alloc] initWithIndex:i];
+        AldCardSidesViewContainer *card = [[AldCardSidesViewContainer alloc] initWithFrame:frame index:i];
         
         // Create a rotation view wherein the cards will rotate. This is necessary because the UIView
         // transition kit rotates the parent view as well.
-        CGRect frame = CGRectMake(x, y, cardSize, cardSize);
+        frame.origin.x = x;
+        frame.origin.y = y;
         UIView *rotationView = [[UIView alloc] initWithFrame:frame];
         
         // Store the card so that it will be retained, and add the card's front view to the rotation view, which
@@ -87,29 +105,43 @@
         // Increment X and Y. The map being a perfect square, Y is incremented with even division.
         if (i > 0 && (i + 1) % cardsPerRow == 0) {
             x = 0;
-            y += [AldCardSidesViewContainer cardSquareSize] + paddingSize;
+            y += cardSize + paddingSize;
         } else {
-            x += [AldCardSidesViewContainer cardSquareSize] + paddingSize;
+            x += cardSize + paddingSize;
         }
     }
     
-    // Configure the scroll view
-    _scrollView.canCancelContentTouches = YES;
-    _scrollView.autoresizesSubviews = NO;
-    _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    // Configure the subview for the scroll view, disabling auto resizing
+    mapView.autoresizingMask = UIViewAutoresizingNone;
+    mapView.autoresizesSubviews = NO;
     
+    // Configure the scroll view, disabling auto resizing and other features
+    // which might be enabled by default.
+    _scrollView.autoresizesSubviews = NO;
+    _scrollView.clipsToBounds       = NO;
+    _scrollView.pagingEnabled       = NO;
+    _scrollView.delegate            = self;
+    
+    // Remove all other subviews and add the map view to the scroll view.
     [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_scrollView addSubview:mapView];
-    
-    _scrollView.contentSize = mapFrame.size;
 }
 
 -(void) viewDidAppear: (BOOL)animated
 {
+    // Now that all views (hopefully) are aware of their final frame, assign the content
+    // size to the scroll view and make sure to zero the inserts.
+    //
+    UIView *view = (UIView *)[_scrollView.subviews objectAtIndex:0];
+    _scrollView.contentSize  = view.bounds.size;
+    _scrollView.contentInset = UIEdgeInsetsZero;
+    
+    // Set the zoom scale for the card collection.
+    //
     CGRect scrollViewFrame = _scrollView.frame;
-    CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
-    CGFloat scaleHeight = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-    CGFloat minScale = MIN(scaleWidth, scaleHeight);
+    CGFloat scaleWidth     = scrollViewFrame.size.width / self.scrollView.contentSize.width;
+    CGFloat scaleHeight    = scrollViewFrame.size.height / self.scrollView.contentSize.height;
+    CGFloat minScale       = MIN(scaleWidth, scaleHeight);
     
     // Calculate the content size for the scroll view
     _scrollView.maximumZoomScale = 1;
