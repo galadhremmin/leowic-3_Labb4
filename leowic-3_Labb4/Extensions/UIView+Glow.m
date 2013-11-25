@@ -2,6 +2,7 @@
 //  UIView+Glow.m
 //
 //  Created by Jon Manning on 29/05/12.
+//  Adapted by Leonard Wickmark 25/11/13.
 //  Copyright (c) 2012 Secret Lab. All rights reserved.
 //
 
@@ -15,21 +16,24 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
 @implementation UIView (Glow)
 
 // Get the glowing view attached to this one.
-- (UIView*) glowView {
+- (UIView*) glowView
+{
     return objc_getAssociatedObject(self, GLOWVIEW_KEY);
 }
 
 // Attach a view to this one, which we'll use as the glowing view.
-- (void) setGlowView:(UIView*)glowView {
+-(void) setGlowView: (UIView*)glowView
+{
     objc_setAssociatedObject(self, GLOWVIEW_KEY, glowView, OBJC_ASSOCIATION_RETAIN);
 }
 
-- (void)startGlowingWithColor:(UIColor *)color intensity:(CGFloat)intensity {
+-(void) startGlowingWithColor: (UIColor *)color intensity: (CGFloat)intensity
+{
     [self startGlowingWithColor:color fromIntensity:0.1 toIntensity:intensity repeat:YES];
 }
 
-- (void) startGlowingWithColor:(UIColor*)color fromIntensity:(CGFloat)fromIntensity toIntensity:(CGFloat)toIntensity repeat:(BOOL)repeat {
-    
+-(void) startGlowingWithColor: (UIColor*)color fromIntensity: (CGFloat)fromIntensity toIntensity: (CGFloat)toIntensity repeat: (BOOL)repeat
+{
     // If we're already glowing, don't bother
     if ([self glowView])
         return;
@@ -82,7 +86,8 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
     [self setGlowView:glowView];
 }
 
-- (void) glowOnceAtLocation:(CGPoint)point inView:(UIView*)view {
+-(void) glowOnceAtLocation: (CGPoint)point inView: (UIView*)view
+{
     [self startGlowingWithColor:[UIColor whiteColor] fromIntensity:0 toIntensity:0.6 repeat:NO];
     
     [self glowView].center = point;
@@ -95,7 +100,8 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
     });
 }
 
-- (void)glowOnce {
+-(void) glowOnce
+{
     [self startGlowing];
     
     int64_t delayInSeconds = 2.0;
@@ -107,13 +113,15 @@ static char* GLOWVIEW_KEY = "GLOWVIEW";
 }
 
 // Create a pulsing, glowing view based on this one.
-- (void) startGlowing {
+-(void) startGlowing
+{
     [self startGlowingWithColor:[UIColor whiteColor] intensity:0.6];
 }
 
 // Stop glowing by removing the glowing view from the superview 
 // and removing the association between it and this object.
-- (void) stopGlowing {
+-(void) stopGlowing
+{
     [[self glowView] removeFromSuperview];
     [self setGlowView:nil];
 }

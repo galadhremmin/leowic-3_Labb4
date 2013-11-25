@@ -30,6 +30,8 @@
 		D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B266183936CB0013DD81 /* back-texture.jpg */; };
 		D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B267183936CB0013DD81 /* front-texture.jpg */; };
 		D7CA1702183AE16600660A82 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CA1701183AE16600660A82 /* UIView+Glow.m */; };
+		D7F3C9C718439FF8001A3152 /* parmaite.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7F3C9C618439FF8001A3152 /* parmaite.ttf */; };
+		D7F3C9CA1843A52E001A3152 /* AldCardData.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F3C9C91843A52E001A3152 /* AldCardData.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +80,9 @@
 		D7C3B267183936CB0013DD81 /* front-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "front-texture.jpg"; sourceTree = "<group>"; };
 		D7CA1700183AE16600660A82 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
 		D7CA1701183AE16600660A82 /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
+		D7F3C9C618439FF8001A3152 /* parmaite.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = parmaite.ttf; sourceTree = "<group>"; };
+		D7F3C9C81843A52E001A3152 /* AldCardData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardData.h; sourceTree = "<group>"; };
+		D7F3C9C91843A52E001A3152 /* AldCardData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardData.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -192,6 +197,8 @@
 		D7C3B2481838F0190013DD81 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D7F3C9C81843A52E001A3152 /* AldCardData.h */,
+				D7F3C9C91843A52E001A3152 /* AldCardData.m */,
 				D7C3B2491838F0380013DD81 /* AldGameModel.h */,
 				D7C3B24A1838F0380013DD81 /* AldGameModel.m */,
 			);
@@ -227,6 +234,7 @@
 		D7C3B265183936CB0013DD81 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				D7F3C9C618439FF8001A3152 /* parmaite.ttf */,
 				D7C3B266183936CB0013DD81 /* back-texture.jpg */,
 				D7C3B267183936CB0013DD81 /* front-texture.jpg */,
 			);
@@ -315,6 +323,7 @@
 				D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */,
 				D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */,
 				D70738B818327552007FF061 /* Main.storyboard in Resources */,
+				D7F3C9C718439FF8001A3152 /* parmaite.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,6 +350,7 @@
 				D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */,
 				D70738DC1832777A007FF061 /* AldViewController.m in Sources */,
 				D7CA1702183AE16600660A82 /* UIView+Glow.m in Sources */,
+				D7F3C9CA1843A52E001A3152 /* AldCardData.m in Sources */,
 				D7C3B26418391A380013DD81 /* AldCardSideView.m in Sources */,
 				D70738B118327552007FF061 /* main.m in Sources */,
 			);

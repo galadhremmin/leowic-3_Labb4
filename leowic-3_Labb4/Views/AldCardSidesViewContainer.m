@@ -24,7 +24,9 @@
     self = [super init];
     if (self) {
         _index = index;
+        // The card's front side.
         _frontView = [[AldCardFrontView alloc] initWithFrame:frame associatedWithCard:self];
+        // The card's rear side.
         _backView  = [[AldCardBackView  alloc] initWithFrame:frame associatedWithCard:self];
     }
     
@@ -33,6 +35,7 @@
 
 -(UIView*) oppositeView: (UIView *)view
 {
+    // Acquire the opposite side for the specified view.
     if (view == _backView) {
         return _frontView;
     }
@@ -44,15 +47,19 @@
     return nil;
 }
 
--(void)    flipFromView: (UIView *)view configureDestinationView: (void (^)(UIView *destinationView))configureDestinationViewHandler completed: (void (^)(UIView *previousView, UIView *destinationView))completedHandler
+-(void) flipFromView: (UIView *)view configureDestinationView: (void (^)(UIView *destinationView))configureDestinationViewHandler completed: (void (^)(UIView *previousView, UIView *destinationView))completedHandler
 {
-    __weak UIView *sourceView = view;
-    __weak UIView *oppositeView = [self oppositeView:view];
+    __block UIView *sourceView = view;
+    __block UIView *oppositeView = [self oppositeView:view];
     
     if (configureDestinationViewHandler != nil) {
+        // Execute the configuration block to prepare the opposite view. This block can trigger
+        // loading functions such as acquiring data from web services.
         configureDestinationViewHandler(oppositeView);
     }
     
+    // Transition from the source view to the destination view. Execute the completion block
+    // upon finishing the transition.
     [UIView transitionFromView:sourceView
                         toView:oppositeView
                       duration:2

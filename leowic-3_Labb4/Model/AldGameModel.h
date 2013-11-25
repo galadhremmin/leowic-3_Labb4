@@ -7,13 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AldCardData.h"
 
 @interface AldGameModel : NSObject
 
-@property(nonatomic) NSUInteger mapSize;
+@property(nonatomic) NSUInteger cardsPerRow;
 
--(id)         initWithVariants: (NSUInteger)variants;
--(void)       generateMap;
--(NSUInteger) variationForIndex: (NSUInteger)index;
+-(id) initWithNumberOfCards: (NSUInteger)numberOfCards;
+-(void) prepareCards;
+-(AldCardData *) dataForIndex: (NSUInteger)index;
+-(NSArray *) collectVariants: (NSUInteger)numberOfVariants;
 
 @end

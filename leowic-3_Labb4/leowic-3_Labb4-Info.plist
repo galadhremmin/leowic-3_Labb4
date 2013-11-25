@@ -2,6 +2,79 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>Tengwar symbols</key>
+	<dict>
+		<key>9</key>
+		<string>hyarmen</string>
+		<key>,</key>
+		<string>esse nuquerna</string>
+		<key>k</key>
+		<string>esse</string>
+		<key>i</key>
+		<string>silme nuquerna</string>
+		<key>8</key>
+		<string>silme</string>
+		<key>m</key>
+		<string>alda</string>
+		<key>j</key>
+		<string>lambe</string>
+		<key>u</key>
+		<string>arda</string>
+		<key>7</key>
+		<string>rómen</string>
+		<key>n</key>
+		<string>wilya</string>
+		<key>h</key>
+		<string>anna</string>
+		<key>y</key>
+		<string>vala</string>
+		<key>6</key>
+		<string>óre</string>
+		<key>b</key>
+		<string>nwalme</string>
+		<key>g</key>
+		<string>noldo</string>
+		<key>t</key>
+		<string>malta</string>
+		<key>5</key>
+		<string>númen</string>
+		<key>v</key>
+		<string>unque</string>
+		<key>f</key>
+		<string>anca</string>
+		<key>r</key>
+		<string>ampa</string>
+		<key>4</key>
+		<string>anto</string>
+		<key>c</key>
+		<string>hwesta</string>
+		<key>d</key>
+		<string>aha</string>
+		<key>e</key>
+		<string>formen</string>
+		<key>3</key>
+		<string>súle</string>
+		<key>x</key>
+		<string>ungwe</string>
+		<key>s</key>
+		<string>anga</string>
+		<key>w</key>
+		<string>umbar</string>
+		<key>2</key>
+		<string>ando</string>
+		<key>z</key>
+		<string>quesse</string>
+		<key>a</key>
+		<string>calma</string>
+		<key>q</key>
+		<string>parma</string>
+		<key>1</key>
+		<string>tinco</string>
+	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>parmaite.ttf</string>
+	</array>
 	<key>UIViewEdgeAntialiasing</key>
 	<true/>
 	<key>UIStatusBarStyle</key>

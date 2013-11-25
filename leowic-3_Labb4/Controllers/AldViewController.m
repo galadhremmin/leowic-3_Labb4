@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AldViewController.h"
 #import "AldCardBackView.h"
+#import "AldCardData.h"
 
 #define kNumberOfSimultaneousCardSelections (2)
 
@@ -44,6 +45,18 @@
     [self configure];
 }
 
+-(void) viewDidLayoutSubviews
+{
+    // Resize the scroll view by assigning its frame to the superview's bounds.
+    // Note that the superview's frame apparently isn't affected by the rotation,
+    // thus the bounds is used instead.
+    //
+    _scrollView.frame = self.view.bounds;
+    
+    // Recalculate the zoom scale and more.
+    [self calculateScale:NO];
+}
+
 -(UIView *) viewForZoomingInScrollView: (UIScrollView *)scrollView
 {
     // Always presume that it is the first subview within the scroll view which is to
@@ -54,10 +67,10 @@
 
 -(void) configure
 {
-    _model = [[AldGameModel alloc] initWithVariants:16];
+    _model = [[AldGameModel alloc] initWithNumberOfCards:16];
     
     // Map size (in number of cards per row)
-    int cardsPerRow = _model.mapSize;
+    int cardsPerRow = _model.cardsPerRow;
     
     // Number of cards in total (cardsPerRow^2)
     int numberOfCards = cardsPerRow * cardsPerRow;
@@ -127,7 +140,7 @@
     [_scrollView addSubview:mapView];
 }
 
--(void) viewDidAppear: (BOOL)animated
+-(void) calculateScale: (BOOL)animated
 {
     // Now that all views (hopefully) are aware of their final frame, assign the content
     // size to the scroll view and make sure to zero the inserts.
@@ -138,14 +151,28 @@
     
     // Set the zoom scale for the card collection.
     //
-    CGRect scrollViewFrame = _scrollView.frame;
-    CGFloat scaleWidth     = scrollViewFrame.size.width / self.scrollView.contentSize.width;
-    CGFloat scaleHeight    = scrollViewFrame.size.height / self.scrollView.contentSize.height;
-    CGFloat minScale       = MIN(scaleWidth, scaleHeight);
-    
-    // Calculate the content size for the scroll view
     _scrollView.maximumZoomScale = 1;
-    _scrollView.minimumZoomScale = minScale;
+    switch ([[UIDevice currentDevice] orientation]) {
+        case UIDeviceOrientationLandscapeLeft:
+        case UIDeviceOrientationLandscapeRight:
+            // Minimum zoom scale based on the width, i.e. it should be possible to see all cards
+            // on a horizontal level.
+            _scrollView.minimumZoomScale = _scrollView.frame.size.width / _scrollView.contentSize.width;
+            break;
+            
+        case UIDeviceOrientationPortrait:
+        case UIDeviceOrientationPortraitUpsideDown:
+        default:
+            // In portrait mode, the zoom scale is based on the height, i.e. it should be possible
+            // to see all cards on a vertical level.
+            _scrollView.minimumZoomScale = _scrollView.frame.size.height / _scrollView.contentSize.height;
+            break;
+    }
+    [_scrollView setZoomScale:_scrollView.minimumZoomScale animated:animated];
+    
+    NSLog(@"Scroll view zoom levels: %f --> %f", _scrollView.minimumZoomScale, _scrollView.maximumZoomScale);
+    NSLog(@"Scroll view frame: (%f, %f)", _scrollView.frame.size.width, _scrollView.frame.size.height);
+    NSLog(@"Content size: (%f, %f)", _scrollView.contentSize.width, _scrollView.contentSize.height);
 }
 
 -(void) handleCardTap: (UITapGestureRecognizer *)sender
@@ -174,33 +201,36 @@
         _selectedCards = [[NSMutableArray alloc] initWithCapacity:2];
     }
     
-    if ([_selectedCards count] < kNumberOfSimultaneousCardSelections) {
-        if ([_selectedCards containsObject:cardView]) {
-            // The card already exists in the collection - deselect it
-            [cardView deselect];
-            [_selectedCards removeObject:cardView];
-        } else {
-            // The card doesn't exist in the collection with selected cards. Select it.
-            [cardView select];
-            [_selectedCards addObject:cardView];
+    @synchronized(_selectedCards) {
+        if ([_selectedCards count] < kNumberOfSimultaneousCardSelections) {
+            if ([_selectedCards containsObject:cardView]) {
+                // The card already exists in the collection - deselect it
+                [cardView deselect];
+                [_selectedCards removeObject:cardView];
+            } else {
+                // The card doesn't exist in the collection with selected cards. Select it.
+                [cardView select];
+                [_selectedCards addObject:cardView];
+            }
         }
     }
     
     if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
         // Flip the card after two seconds of flashing
-        [self performSelector:@selector(flipCards) withObject:nil afterDelay:2];
+        [self performSelector:@selector(flipCardsToBack) withObject:nil afterDelay:2];
     }
 }
 
--(void) flipCards
+-(void) flipCardsToBack
 {
     __block BOOL matches = [self selectedCardsVariantsMatch];
+    __block NSObject *controller = self;
+    
     for (AldCardSideView *cardSideView in _selectedCards) {
         // Deselect the card view as the animation will ensue
         [cardSideView deselect];
         
-        __weak AldCardSidesViewContainer* card = cardSideView.associatedCard;
-        __weak NSMutableArray *selectedCards = _selectedCards;
+        __block AldCardSidesViewContainer* card = cardSideView.associatedCard;
         
         [card flipFromView:cardSideView configureDestinationView:^(UIView *view) {
             // Skip the front of the card as it has nothing to configure
@@ -213,19 +243,41 @@
             int index = cardBackSideView.associatedCard.index;
             
             // Temporary: assign the variation as the textual content for thed details label
-            NSString *title = [NSString stringWithFormat:@"%d", [_model variationForIndex:index]];
-            cardBackSideView.detailsTitleLabel.text = title;
+            AldCardData *data = [_model dataForIndex:index];
+            cardBackSideView.detailsTitleLabel.text = data.title;
+            cardBackSideView.detailsDescriptionLabel.text = data.description;
+            
         } completed:^(UIView *sourceView, UIView* destinationView) {
+            // Remove the source view from its superview.
+            [sourceView removeFromSuperview];
+            
             if (!matches) {
-                // The two cards doesn't match--so flip right back.
-                [card flipFromView:destinationView configureDestinationView:nil completed:^(UIView *s, UIView* d) {
-                    [selectedCards removeAllObjects];
-                }];
+                // Sleep for one second , giving the player a chance to memorize the cards.
+                [controller performSelector:@selector(flipCardsToFront:) withObject:destinationView afterDelay:1];
             } else {
-                [selectedCards removeAllObjects];
+                @synchronized(_selectedCards) {
+                    [_selectedCards removeAllObjects];
+                }
             }
         }];
     }
+}
+
+-(void) flipCardsToFront: (AldCardSideView *)sourceView
+{
+    // The two cards doesn't match--so flip right back.
+    [sourceView.associatedCard flipFromView:sourceView configureDestinationView:nil completed:^(UIView *s, UIView* d) {
+        // Free up a bit of memory by removing the label's textual content as well
+        // as removing it from its superview.
+        AldCardBackView *cardBackSideView = (AldCardBackView *) s;
+        cardBackSideView.detailsDescriptionLabel.text = nil;
+        cardBackSideView.detailsTitleLabel.text = nil;
+        [cardBackSideView removeFromSuperview];
+        
+        @synchronized(_selectedCards) {
+            [_selectedCards removeAllObjects];
+        }
+    }];
 }
 
 -(BOOL) selectedCardsVariantsMatch
@@ -234,12 +286,12 @@
     
     for (; i < [_selectedCards count]; i += 1) {
         AldCardSideView *cardSideView = (AldCardSideView *)[_selectedCards objectAtIndex:i];
-        NSUInteger currentVariant = [_model variationForIndex:cardSideView.associatedCard.index];
+        AldCardData *currentVariant = [_model dataForIndex:cardSideView.associatedCard.index];
         
         if (i < 1) {
             // First iteration - assign to the variant variable
-            variant = currentVariant;
-        } else if (variant != currentVariant) {
+            variant = currentVariant.hash;
+        } else if (variant != currentVariant.hash) {
             // All subsequent iterations - compare the variant with the initial variant. If it
             // isn't the same, the cards aren't the same.
             return NO;

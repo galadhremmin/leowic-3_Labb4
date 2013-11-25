@@ -11,5 +11,6 @@
 @interface AldCardBackView : AldCardSideView
 
 @property(nonatomic, weak) UILabel *detailsTitleLabel;
+@property(nonatomic, weak) UILabel *detailsDescriptionLabel;
 
 @end

@@ -64,7 +64,7 @@
 
 -(void) select
 {
-    [self startGlowingWithColor:[UIColor orangeColor] intensity:0.5];
+    [self startGlowingWithColor:[UIColor colorWithRed:144/255.0 green:0 blue:32/255.0 alpha:1] intensity:0.5];
 }
 
 @end
