@@ -28,8 +28,10 @@
         return;
     }
     
+    CGFloat portraitWidth = 0.25 * self.frame.size.width;
     UILabel *tengwarLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height * 0.6)];
     UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, tengwarLabel.frame.size.height, self.frame.size.width, self.frame.size.height - tengwarLabel.frame.size.height)];
+    UIImageView *portraitView = [[UIImageView alloc] initWithFrame:CGRectMake(self.frame.size.width - portraitWidth - 0.15 * portraitWidth, 0.15 * portraitWidth, portraitWidth, portraitWidth)];
     
     // Gather the font from the library. This font is defined in the application bundle
     // configuration parameter "Fonts provided by application"
@@ -49,12 +51,17 @@
     descriptionLabel.autoresizingMask          = UIViewAutoresizingNone;
     descriptionLabel.adjustsFontSizeToFitWidth = YES;
     
+    portraitView.autoresizingMask              = UIViewAutoresizingNone;
+    portraitView.backgroundColor = [UIColor redColor];
+    
     // Add the labels to the superview and associate the two labels with their respective
     // (weak) properties.
     [self addSubview:tengwarLabel];
     [self addSubview:descriptionLabel];
+    [self addSubview:portraitView];
     
     _detailsTitleLabel       = tengwarLabel;
     _detailsDescriptionLabel = descriptionLabel;
+    _portraitView            = portraitView;
 }
 @end

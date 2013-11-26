@@ -15,5 +15,6 @@
 @property (weak, nonatomic)   UIScrollView *scrollView;
 @property (weak, nonatomic)   UIView       *subview;
 @property (strong, nonatomic) AldGameModel *model;
+@property (atomic)            NSArray      *players;
 
 @end

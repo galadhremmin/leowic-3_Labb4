@@ -7,6 +7,8 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import "UIImage+BundleExtensions.h"
 #import "AldViewController.h"
 #import "AldCardBackView.h"
 #import "AldCardData.h"
@@ -67,7 +69,7 @@
 
 -(void) configure
 {
-    _model = [[AldGameModel alloc] initWithNumberOfCards:16];
+    _model = [[AldGameModel alloc] initWithNumberOfCards:16 players:_players.count];
     
     // Map size (in number of cards per row)
     int cardsPerRow = _model.cardsPerRow;
@@ -102,7 +104,11 @@
         // transition kit rotates the parent view as well.
         frame.origin.x = x;
         frame.origin.y = y;
+        
         UIView *rotationView = [[UIView alloc] initWithFrame:frame];
+        
+        // Rotate the cards randomly, giving the impression of a proper board
+        rotationView.transform = CGAffineTransformMakeRotation((arc4random() % 4)*M_PI/180.0);
         
         // Store the card so that it will be retained, and add the card's front view to the rotation view, which
         // in turn is passed along to the UIScrollView.

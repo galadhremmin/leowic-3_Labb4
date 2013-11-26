@@ -16,7 +16,7 @@
 
 @implementation AldGameModel
 
--(id) initWithNumberOfCards: (NSUInteger)numberOfCards
+-(id) initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)players
 {
     self = [super init];
     if (self) {
@@ -51,7 +51,11 @@
     NSUInteger i, n, iterations, i0, i1;
 
     // Initialize the map with enough capacity to hold all cards.
-    _map = [[NSMutableArray alloc] initWithCapacity:totalNumberOfCards];
+    if (_map == nil) {
+        _map = [[NSMutableArray alloc] initWithCapacity:totalNumberOfCards];
+    } else {
+        [_map removeAllObjects];
+    }
     
     // From the application's configuration settings, acquire enough card variants to
     // populate the full map. This is (of course) the number of cards per row times two.

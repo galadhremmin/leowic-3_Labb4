@@ -8,12 +8,14 @@
 
 #import <Foundation/Foundation.h>
 #import "AldCardData.h"
+#import "AldPlayerData.h"
 
 @interface AldGameModel : NSObject
 
 @property(nonatomic) NSUInteger cardsPerRow;
+@property(nonatomic, strong) NSArray *players;
 
--(id) initWithNumberOfCards: (NSUInteger)numberOfCards;
+-(id) initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)players;
 -(void) prepareCards;
 -(AldCardData *) dataForIndex: (NSUInteger)index;
 -(NSArray *) collectVariants: (NSUInteger)numberOfVariants;

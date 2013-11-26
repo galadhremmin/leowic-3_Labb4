@@ -19,6 +19,18 @@
 		D70738C518327552007FF061 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D70738A418327552007FF061 /* Foundation.framework */; };
 		D70738C618327552007FF061 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D70738A818327552007FF061 /* UIKit.framework */; };
 		D70738DC1832777A007FF061 /* AldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70738DB1832777A007FF061 /* AldViewController.m */; };
+		D78E4CAD1844F3E1006FDC8B /* elf1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CA41844F3E0006FDC8B /* elf1.jpg */; };
+		D78E4CAE1844F3E1006FDC8B /* elf2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CA51844F3E0006FDC8B /* elf2.jpg */; };
+		D78E4CAF1844F3E1006FDC8B /* elf3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CA61844F3E0006FDC8B /* elf3.jpg */; };
+		D78E4CB01844F3E1006FDC8B /* elf4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CA71844F3E0006FDC8B /* elf4.jpg */; };
+		D78E4CB11844F3E1006FDC8B /* elf5.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CA81844F3E0006FDC8B /* elf5.jpg */; };
+		D78E4CB21844F3E1006FDC8B /* elf6.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CA91844F3E0006FDC8B /* elf6.jpg */; };
+		D78E4CB31844F3E1006FDC8B /* elf7.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CAA1844F3E0006FDC8B /* elf7.jpg */; };
+		D78E4CB41844F3E1006FDC8B /* elf8.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CAB1844F3E1006FDC8B /* elf8.jpg */; };
+		D78E4CB51844F3E1006FDC8B /* elf9.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D78E4CAC1844F3E1006FDC8B /* elf9.jpg */; };
+		D78E4CB81844F52B006FDC8B /* AldPortraitSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CB71844F52B006FDC8B /* AldPortraitSelectionViewController.m */; };
+		D78E4CBB1844F7C4006FDC8B /* AldPlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CBA1844F7C4006FDC8B /* AldPlayerSelectionViewController.m */; };
+		D78E4CBE18450671006FDC8B /* AldPlayerData.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CBD18450671006FDC8B /* AldPlayerData.m */; };
 		D7C3B24B1838F0380013DD81 /* AldGameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B24A1838F0380013DD81 /* AldGameModel.m */; };
 		D7C3B2521838FA710013DD81 /* AldCardFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B2511838FA710013DD81 /* AldCardFrontView.m */; };
 		D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B25418390D1E0013DD81 /* AldCardBackView.m */; };
@@ -59,6 +71,21 @@
 		D70738C318327552007FF061 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		D70738DA1832777A007FF061 /* AldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldViewController.h; sourceTree = "<group>"; };
 		D70738DB1832777A007FF061 /* AldViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldViewController.m; sourceTree = "<group>"; };
+		D78E4CA41844F3E0006FDC8B /* elf1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf1.jpg; sourceTree = "<group>"; };
+		D78E4CA51844F3E0006FDC8B /* elf2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf2.jpg; sourceTree = "<group>"; };
+		D78E4CA61844F3E0006FDC8B /* elf3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf3.jpg; sourceTree = "<group>"; };
+		D78E4CA71844F3E0006FDC8B /* elf4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf4.jpg; sourceTree = "<group>"; };
+		D78E4CA81844F3E0006FDC8B /* elf5.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf5.jpg; sourceTree = "<group>"; };
+		D78E4CA91844F3E0006FDC8B /* elf6.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf6.jpg; sourceTree = "<group>"; };
+		D78E4CAA1844F3E0006FDC8B /* elf7.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf7.jpg; sourceTree = "<group>"; };
+		D78E4CAB1844F3E1006FDC8B /* elf8.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf8.jpg; sourceTree = "<group>"; };
+		D78E4CAC1844F3E1006FDC8B /* elf9.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = elf9.jpg; sourceTree = "<group>"; };
+		D78E4CB61844F52B006FDC8B /* AldPortraitSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPortraitSelectionViewController.h; sourceTree = "<group>"; };
+		D78E4CB71844F52B006FDC8B /* AldPortraitSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPortraitSelectionViewController.m; sourceTree = "<group>"; };
+		D78E4CB91844F7C4006FDC8B /* AldPlayerSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPlayerSelectionViewController.h; sourceTree = "<group>"; };
+		D78E4CBA1844F7C4006FDC8B /* AldPlayerSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPlayerSelectionViewController.m; sourceTree = "<group>"; };
+		D78E4CBC18450671006FDC8B /* AldPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPlayerData.h; sourceTree = "<group>"; };
+		D78E4CBD18450671006FDC8B /* AldPlayerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPlayerData.m; sourceTree = "<group>"; };
 		D7C3B2491838F0380013DD81 /* AldGameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldGameModel.h; sourceTree = "<group>"; };
 		D7C3B24A1838F0380013DD81 /* AldGameModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldGameModel.m; sourceTree = "<group>"; };
 		D7C3B2501838FA710013DD81 /* AldCardFrontView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardFrontView.h; sourceTree = "<group>"; };
@@ -166,8 +193,28 @@
 			children = (
 				D70738DA1832777A007FF061 /* AldViewController.h */,
 				D70738DB1832777A007FF061 /* AldViewController.m */,
+				D78E4CB61844F52B006FDC8B /* AldPortraitSelectionViewController.h */,
+				D78E4CB71844F52B006FDC8B /* AldPortraitSelectionViewController.m */,
+				D78E4CB91844F7C4006FDC8B /* AldPlayerSelectionViewController.h */,
+				D78E4CBA1844F7C4006FDC8B /* AldPlayerSelectionViewController.m */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D78E4CA31844F3E0006FDC8B /* Portraits */ = {
+			isa = PBXGroup;
+			children = (
+				D78E4CA41844F3E0006FDC8B /* elf1.jpg */,
+				D78E4CA51844F3E0006FDC8B /* elf2.jpg */,
+				D78E4CA61844F3E0006FDC8B /* elf3.jpg */,
+				D78E4CA71844F3E0006FDC8B /* elf4.jpg */,
+				D78E4CA81844F3E0006FDC8B /* elf5.jpg */,
+				D78E4CA91844F3E0006FDC8B /* elf6.jpg */,
+				D78E4CAA1844F3E0006FDC8B /* elf7.jpg */,
+				D78E4CAB1844F3E1006FDC8B /* elf8.jpg */,
+				D78E4CAC1844F3E1006FDC8B /* elf9.jpg */,
+			);
+			path = Portraits;
 			sourceTree = "<group>";
 		};
 		D7C3B2481838F0190013DD81 /* Model */ = {
@@ -177,6 +224,8 @@
 				D7F3C9C91843A52E001A3152 /* AldCardData.m */,
 				D7C3B2491838F0380013DD81 /* AldGameModel.h */,
 				D7C3B24A1838F0380013DD81 /* AldGameModel.m */,
+				D78E4CBC18450671006FDC8B /* AldPlayerData.h */,
+				D78E4CBD18450671006FDC8B /* AldPlayerData.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -210,6 +259,7 @@
 		D7C3B265183936CB0013DD81 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				D78E4CA31844F3E0006FDC8B /* Portraits */,
 				D7F3C9C618439FF8001A3152 /* parmaite.ttf */,
 				D7C3B266183936CB0013DD81 /* back-texture.jpg */,
 				D7C3B267183936CB0013DD81 /* front-texture.jpg */,
@@ -294,10 +344,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D78E4CAE1844F3E1006FDC8B /* elf2.jpg in Resources */,
+				D78E4CB51844F3E1006FDC8B /* elf9.jpg in Resources */,
+				D78E4CB11844F3E1006FDC8B /* elf5.jpg in Resources */,
 				D70738BD18327552007FF061 /* Images.xcassets in Resources */,
 				D70738AF18327552007FF061 /* InfoPlist.strings in Resources */,
+				D78E4CB21844F3E1006FDC8B /* elf6.jpg in Resources */,
 				D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */,
+				D78E4CAF1844F3E1006FDC8B /* elf3.jpg in Resources */,
+				D78E4CAD1844F3E1006FDC8B /* elf1.jpg in Resources */,
+				D78E4CB01844F3E1006FDC8B /* elf4.jpg in Resources */,
 				D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */,
+				D78E4CB41844F3E1006FDC8B /* elf8.jpg in Resources */,
+				D78E4CB31844F3E1006FDC8B /* elf7.jpg in Resources */,
 				D70738B818327552007FF061 /* Main.storyboard in Resources */,
 				D7F3C9C718439FF8001A3152 /* parmaite.ttf in Resources */,
 			);
@@ -319,8 +378,11 @@
 			files = (
 				D7C3B2521838FA710013DD81 /* AldCardFrontView.m in Sources */,
 				D7C3B25A183910DC0013DD81 /* UIImage+BundleExtensions.m in Sources */,
+				D78E4CB81844F52B006FDC8B /* AldPortraitSelectionViewController.m in Sources */,
 				D70738B518327552007FF061 /* AldAppDelegate.m in Sources */,
+				D78E4CBE18450671006FDC8B /* AldPlayerData.m in Sources */,
 				D7C3B24B1838F0380013DD81 /* AldGameModel.m in Sources */,
+				D78E4CBB1844F7C4006FDC8B /* AldPlayerSelectionViewController.m in Sources */,
 				D7C3B261183913930013DD81 /* AldCardSidesViewContainer.m in Sources */,
 				D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */,
 				D70738DC1832777A007FF061 /* AldViewController.m in Sources */,

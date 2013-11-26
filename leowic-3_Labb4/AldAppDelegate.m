@@ -7,12 +7,15 @@
 //
 
 #import "AldAppDelegate.h"
+#import "UIImage+BundleExtensions.h"
 
 @implementation AldAppDelegate
 
 -(BOOL) application: (UIApplication *)application didFinishLaunchingWithOptions: (NSDictionary *)launchOptions
 {
-    // Override point for customization after application launch.
+    UIImage *backgroundImage = [UIImage imageFromBundle:@"front-texture.jpg"];
+    [[UINavigationBar appearance] setBackgroundImage:backgroundImage forBarMetrics:UIBarMetricsDefault];
+    
     return YES;
 }
 							
