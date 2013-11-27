@@ -1,5 +1,5 @@
 //
-//  AldPlayerData.h
+//  AldJSONSerializable.h
 //  leowic-3_Labb4
 //
 //  Created by Leonard Wickmark on 27/11/13.
@@ -7,12 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AldJSONData.h"
 
-@interface AldPlayerData : AldJSONData
+@protocol AldJSONSerializable <NSObject>
 
-@property(nonatomic) NSUInteger score;
-
--(void) scorePoints: (NSUInteger)points;
+-(id)             initFromSerialization: (NSDictionary *)jsonData;
+-(NSDictionary *) serialize;
 
 @end

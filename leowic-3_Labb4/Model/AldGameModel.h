@@ -13,11 +13,14 @@
 @interface AldGameModel : NSObject
 
 @property(nonatomic) NSUInteger cardsPerRow;
-@property(nonatomic, strong) NSArray *players;
 
--(id) initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)players;
--(void) prepareCards;
--(AldCardData *) dataForIndex: (NSUInteger)index;
--(NSArray *) collectVariants: (NSUInteger)numberOfVariants;
+-(id)              initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)numberOfPlayers;
+-(void)            preparePlayers: (NSUInteger)numberOfPlayers;
+-(void)            prepareCards;
+-(AldCardData *)   dataForIndex: (NSUInteger)index;
+-(NSArray *)       collectVariants: (NSUInteger)numberOfVariants;
+-(AldPlayerData *) currentPlayer;
+-(void)            switchPlayers;
+-(void)            collectCards: (NSUInteger)index;
 
 @end

@@ -7,16 +7,19 @@
 //
 
 #import "AldGameModel.h"
+#import "AldPlayerData.h"
 
 @interface AldGameModel ()
 
-@property(nonatomic) NSMutableArray *map;
+@property(nonatomic) NSMutableArray  *map;
+@property(nonatomic) NSUInteger       currentPlayerIndex;
+@property(nonatomic, strong) NSArray *players;
 
 @end
 
 @implementation AldGameModel
 
--(id) initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)players
+-(id) initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)numberOfPlayers
 {
     self = [super init];
     if (self) {
@@ -35,10 +38,24 @@
         
         _cardsPerRow = cardsPerRow;
         
+        [self preparePlayers:numberOfPlayers];
         [self prepareCards];
     }
     
     return self;
+}
+
+-(void) preparePlayers: (NSUInteger)numberOfPlayers
+{
+    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:numberOfPlayers];
+    
+    for (int i = 0; i < numberOfPlayers; i += 1) {
+        AldPlayerData *player = [[AldPlayerData alloc] init];
+        [players addObject:player];
+    }
+    
+    [self setPlayers:players];
+    [self setCurrentPlayerIndex:0];
 }
 
 -(void) prepareCards
@@ -76,7 +93,7 @@
     for (i = 0; i < iterations; i += 1) {
         
         i0 = i % totalNumberOfCards;
-        i1 = arc4random() % totalNumberOfCards;
+        i1 = arc4random_uniform(totalNumberOfCards);
         
         if (i0 != i1) {
             [_map exchangeObjectAtIndex:i1 withObjectAtIndex:i0];
@@ -131,7 +148,7 @@
             
             // Increment the index or randomize it, depending on the instruction.
             if (randomized) {
-                index = arc4random() % availableVariants;
+                index = arc4random_uniform(availableVariants);
             } else {
                 index += 1;
             }
@@ -164,6 +181,33 @@
     }
     
     return collection;
+}
+
+-(AldPlayerData *)currentPlayer
+{
+    return [_players objectAtIndex:_currentPlayerIndex];
+}
+
+-(void) switchPlayers
+{
+    NSUInteger currentPlayer = _currentPlayerIndex + 1;
+    if (currentPlayer >= _players.count) {
+        currentPlayer = 0;
+    }
+    
+    [self setCurrentPlayerIndex:currentPlayer];
+}
+
+-(void) collectCards: (NSUInteger)index
+{
+    if (index >= _map.count) {
+        return;
+    }
+    
+    AldCardData *card = [_map objectAtIndex:index];
+    card.collected = YES;
+    
+    [[self currentPlayer] scorePoints:_map.count];
 }
 
 @end

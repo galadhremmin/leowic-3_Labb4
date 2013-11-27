@@ -12,9 +12,14 @@
 
 @interface AldViewController : UIViewController<UIScrollViewDelegate>
 
-@property (weak, nonatomic)   UIScrollView *scrollView;
-@property (weak, nonatomic)   UIView       *subview;
-@property (strong, nonatomic) AldGameModel *model;
-@property (atomic)            NSArray      *players;
+@property (weak, nonatomic)   IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic)   IBOutlet UIImageView  *firstPlayerView;
+@property (weak, nonatomic)   IBOutlet UIImageView  *secondPlayerView;
+@property (weak, nonatomic)   IBOutlet UIImageView  *willOWisp;
+@property (weak, nonatomic)            UIView       *subview;
+@property (strong, nonatomic)          AldGameModel *model;
+@property (strong, atomic)             NSArray      *players;
+
+-(void) createPlayersWithPortraits: (NSArray *)portraits;
 
 @end

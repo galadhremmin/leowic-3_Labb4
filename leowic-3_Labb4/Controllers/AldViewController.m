@@ -12,6 +12,7 @@
 #import "AldViewController.h"
 #import "AldCardBackView.h"
 #import "AldCardData.h"
+#import "AldPlayerWrapper.h"
 
 #define kNumberOfSimultaneousCardSelections (2)
 
@@ -24,17 +25,11 @@
 
 @implementation AldViewController
 
+#pragma mark - View life-cycle delegation
+
 -(void) viewDidLoad
 {
     [super viewDidLoad];
-    
-    // Create the scroll view programmatically as iOS7 storyboard layout configuration for the
-    // UIScrollView doesn't mix very well with subviews created programmatically. See reference:
-    // https://developer.apple.com/library/ios/technotes/tn2154/_index.html
-    //
-    UIScrollView *view = [[UIScrollView alloc] initWithFrame:self.view.frame];
-    [self.view addSubview:view];
-    _scrollView = view;
     
     // Attach a tap gesture recogniser to the UIScrollView. It'll be used to recognise user
     // interaction for the cards.
@@ -59,6 +54,8 @@
     [self calculateScale:NO];
 }
 
+#pragma mark - Scroll view delegation
+
 -(UIView *) viewForZoomingInScrollView: (UIScrollView *)scrollView
 {
     // Always presume that it is the first subview within the scroll view which is to
@@ -67,8 +64,29 @@
     return [scrollView.subviews objectAtIndex:0];
 }
 
+#pragma mark - Game graphics core
+
+-(void) createPlayersWithPortraits: (NSArray *)portraits
+{
+    if (portraits == nil) {
+        return;
+    }
+    
+    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:portraits.count];
+    for (UIImage *portrait in portraits) {
+        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithIndex:players.count portrait:portrait];
+        [players addObject:wrapper];
+    }
+    
+    _players = players;
+}
+
 -(void) configure
 {
+    if (_players == nil || _players.count < 1) {
+        [NSException raise:@"Invalid number of portraits." format:@"%d is not a valid number of portraits (i.e. players)", _players.count];
+    }
+    
     _model = [[AldGameModel alloc] initWithNumberOfCards:16 players:_players.count];
     
     // Map size (in number of cards per row)
@@ -92,6 +110,8 @@
     
     UIView *mapView = [[UIView alloc] initWithFrame:mapFrame];
     
+    // Lay out the memory cards on the table.
+    //
     _cards = [[NSMutableArray alloc] initWithCapacity:numberOfCards];
     for (int i = 0, x = 0, y = 0; i < numberOfCards; i += 1) {
         
@@ -108,7 +128,8 @@
         UIView *rotationView = [[UIView alloc] initWithFrame:frame];
         
         // Rotate the cards randomly, giving the impression of a proper board
-        rotationView.transform = CGAffineTransformMakeRotation((arc4random() % 4)*M_PI/180.0);
+        int angle = (int) arc4random_uniform(8) - 4; // -4 to +4
+        rotationView.transform = CGAffineTransformMakeRotation(angle*M_PI/180.0);
         
         // Store the card so that it will be retained, and add the card's front view to the rotation view, which
         // in turn is passed along to the UIScrollView.
@@ -128,6 +149,25 @@
         } else {
             x += cardSize + paddingSize;
         }
+    }
+    
+    // Lay out the player portraits
+    //
+    NSArray *portraitViews = @[_firstPlayerView, _secondPlayerView];
+    for (int i = 0; i < portraitViews.count; i += 1) {
+        UIImageView *portraitView = [portraitViews objectAtIndex:i];
+        
+        portraitView.hidden = i >= _players.count;
+        if (portraitView.hidden) {
+            continue;
+        }
+
+        AldPlayerWrapper *wrapper = [_players objectAtIndex:i];
+        portraitView.image = wrapper.portrait;
+        portraitView.backgroundColor = [UIColor redColor];
+        
+        wrapper.portraitView = portraitView;
+        wrapper.portrait     = nil;
     }
     
     // Configure the subview for the scroll view, disabling auto resizing
@@ -181,51 +221,6 @@
     NSLog(@"Content size: (%f, %f)", _scrollView.contentSize.width, _scrollView.contentSize.height);
 }
 
--(void) handleCardTap: (UITapGestureRecognizer *)sender
-{
-    // You can't flip another set of card if cards are already flipping
-    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
-        return;
-    }
-    
-    if (sender.state != UIGestureRecognizerStateEnded) {
-        return;
-    }
-    
-    // Fetch the subview (to the UIScrollView) at the coordinates where the client double tapped
-    CGPoint coords = [sender locationInView:_scrollView];
-    UIView *view = [_scrollView hitTest:coords withEvent:nil];
-    
-    if (view == nil || ![view isKindOfClass:[AldCardSideView class]]) {
-        return;
-    }
-    
-    AldCardSideView *cardView = (AldCardSideView *)view;
-    
-    // Allocate a mutable array with the capacity of two cards simultaneously selected.
-    if (_selectedCards == nil) {
-        _selectedCards = [[NSMutableArray alloc] initWithCapacity:2];
-    }
-    
-    @synchronized(_selectedCards) {
-        if ([_selectedCards count] < kNumberOfSimultaneousCardSelections) {
-            if ([_selectedCards containsObject:cardView]) {
-                // The card already exists in the collection - deselect it
-                [cardView deselect];
-                [_selectedCards removeObject:cardView];
-            } else {
-                // The card doesn't exist in the collection with selected cards. Select it.
-                [cardView select];
-                [_selectedCards addObject:cardView];
-            }
-        }
-    }
-    
-    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
-        // Flip the card after two seconds of flashing
-        [self performSelector:@selector(flipCardsToBack) withObject:nil afterDelay:2];
-    }
-}
 
 -(void) flipCardsToBack
 {
@@ -306,6 +301,54 @@
     
     // Two cards are expected
     return i == kNumberOfSimultaneousCardSelections;
+}
+
+#pragma mark - Card tapping events
+
+-(void) handleCardTap: (UITapGestureRecognizer *)sender
+{
+    // You can't flip another set of card if cards are already flipping
+    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
+        return;
+    }
+    
+    if (sender.state != UIGestureRecognizerStateEnded) {
+        return;
+    }
+    
+    // Fetch the subview (to the UIScrollView) at the coordinates where the client double tapped
+    CGPoint coords = [sender locationInView:_scrollView];
+    UIView *view = [_scrollView hitTest:coords withEvent:nil];
+    
+    if (view == nil || ![view isKindOfClass:[AldCardSideView class]]) {
+        return;
+    }
+    
+    AldCardSideView *cardView = (AldCardSideView *)view;
+    
+    // Allocate a mutable array with the capacity of two cards simultaneously selected.
+    if (_selectedCards == nil) {
+        _selectedCards = [[NSMutableArray alloc] initWithCapacity:kNumberOfSimultaneousCardSelections];
+    }
+    
+    @synchronized(_selectedCards) {
+        if ([_selectedCards count] < kNumberOfSimultaneousCardSelections) {
+            if ([_selectedCards containsObject:cardView]) {
+                // The card already exists in the collection - deselect it
+                [cardView deselect];
+                [_selectedCards removeObject:cardView];
+            } else {
+                // The card doesn't exist in the collection with selected cards. Select it.
+                [cardView select];
+                [_selectedCards addObject:cardView];
+            }
+        }
+    }
+    
+    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
+        // Flip the card after two seconds of flashing
+        [self performSelector:@selector(flipCardsToBack) withObject:nil afterDelay:2];
+    }
 }
 
 @end

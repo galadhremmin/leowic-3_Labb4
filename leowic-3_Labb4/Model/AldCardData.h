@@ -7,12 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AldJSONData.h"
 
-@interface AldCardData : NSObject
+@interface AldCardData : AldJSONData
 
 @property(readonly, copy, nonatomic) NSString *title;
 @property(readonly, copy, nonatomic) NSString *description;
+@property(nonatomic)                 BOOL      collected;
 
--(id) initWithTitle: (NSString *)title description: (NSString *)description;
+-(id)         initWithTitle: (NSString *)title description: (NSString *)description;
 -(NSUInteger) hash;
+
 @end
