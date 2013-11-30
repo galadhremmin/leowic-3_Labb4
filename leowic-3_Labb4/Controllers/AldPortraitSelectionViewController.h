@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AldPortraitSelectionViewController : UITableViewController
+@interface AldPortraitSelectionViewController : UICollectionViewController
 
 @property(atomic) NSUInteger numberOfPlayers;
 

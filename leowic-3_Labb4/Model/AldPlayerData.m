@@ -10,6 +10,16 @@
 
 @implementation AldPlayerData
 
+-(id) initWithID: (NSUInteger)ID score: (NSUInteger)score
+{
+    self = [super init];
+    if (self) {
+        _ID = ID;
+        _score = score;
+    }
+    return self;
+}
+
 -(void) scorePoints: (NSUInteger)points
 {
     points += _score;

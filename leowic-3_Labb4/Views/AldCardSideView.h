@@ -16,7 +16,5 @@
 -(id)   initWithFrame: (CGRect)frame associatedWithCard: (AldCardSidesViewContainer *)card;
 -(void) initStyles;
 -(void) initContents;
--(void) deselect;
--(void) select;
 
 @end

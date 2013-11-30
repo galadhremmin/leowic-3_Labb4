@@ -10,10 +10,10 @@
 
 @interface AldPlayerWrapper : NSObject
 
-@property(nonatomic, strong) UIImage     *portrait;
+@property(nonatomic, strong) NSString    *portraitPath;
 @property(nonatomic, weak)   UIImageView *portraitView;
-@property(nonatomic)         NSUInteger   index;
+@property(nonatomic)         NSUInteger   ID;
 
--(id) initWithIndex: (NSUInteger)index portrait: (UIImage *)portrait;
+-(id) initWithID: (NSUInteger)ID portraitPath: (NSString *)portraitPath;
 
 @end

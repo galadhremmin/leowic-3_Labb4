@@ -10,12 +10,12 @@
 
 @implementation AldPlayerWrapper
 
--(id) initWithIndex: (NSUInteger)index portrait: (UIImage *)portrait
+-(id) initWithID: (NSUInteger)ID portraitPath: (NSString *)portraitPath
 {
     self = [super init];
     if (self) {
-        _index = index;
-        _portrait = portrait;
+        _ID = ID;
+        _portraitPath = portraitPath;
         _portraitView = nil;
     }
     return self;

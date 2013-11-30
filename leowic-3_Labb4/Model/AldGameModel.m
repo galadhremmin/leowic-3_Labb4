@@ -49,8 +49,8 @@
 {
     NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:numberOfPlayers];
     
-    for (int i = 0; i < numberOfPlayers; i += 1) {
-        AldPlayerData *player = [[AldPlayerData alloc] init];
+    for (NSUInteger i = 0; i < numberOfPlayers; i += 1) {
+        AldPlayerData *player = [[AldPlayerData alloc] initWithID:i + 1 score:0];
         [players addObject:player];
     }
     
@@ -183,6 +183,46 @@
     return collection;
 }
 
+-(BOOL) flipCards: (NSUInteger *)indexes
+{
+    if (indexes == nil) {
+        return NO;
+    }
+    
+    NSUInteger variant = 0;
+    BOOL matches = YES;
+    for (NSUInteger i = 0; i < kAldNumberOfSimultaneousCardSelections; i += 1) {
+        AldCardData *data = [self dataForIndex:indexes[i]];
+        
+        if (variant < 1) {
+            variant = data.hash;
+        } else if (variant != data.hash) {
+            matches = NO;
+            break;
+        }
+    }
+    
+    AldPlayerData *player = [self currentPlayer];
+    
+    if (matches) {
+        [player scorePoints:_map.count];
+    } else {
+        NSUInteger newScore = player.score;
+        NSUInteger penalty = _map.count / 4;
+        
+        if (newScore < penalty) {
+            newScore = 0;
+        } else {
+            newScore -= penalty;
+        }
+        
+        [player scorePoints:newScore];
+    }
+    
+    [self switchPlayers];
+    return matches;
+}
+
 -(AldPlayerData *)currentPlayer
 {
     return [_players objectAtIndex:_currentPlayerIndex];
@@ -196,18 +236,6 @@
     }
     
     [self setCurrentPlayerIndex:currentPlayer];
-}
-
--(void) collectCards: (NSUInteger)index
-{
-    if (index >= _map.count) {
-        return;
-    }
-    
-    AldCardData *card = [_map objectAtIndex:index];
-    card.collected = YES;
-    
-    [[self currentPlayer] scorePoints:_map.count];
 }
 
 @end

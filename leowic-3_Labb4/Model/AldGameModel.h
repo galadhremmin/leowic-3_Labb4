@@ -10,6 +10,8 @@
 #import "AldCardData.h"
 #import "AldPlayerData.h"
 
+#define kAldNumberOfSimultaneousCardSelections (2)
+
 @interface AldGameModel : NSObject
 
 @property(nonatomic) NSUInteger cardsPerRow;
@@ -18,9 +20,8 @@
 -(void)            preparePlayers: (NSUInteger)numberOfPlayers;
 -(void)            prepareCards;
 -(AldCardData *)   dataForIndex: (NSUInteger)index;
--(NSArray *)       collectVariants: (NSUInteger)numberOfVariants;
+-(BOOL)            flipCards: (NSUInteger *)indexes;
 -(AldPlayerData *) currentPlayer;
 -(void)            switchPlayers;
--(void)            collectCards: (NSUInteger)index;
 
 @end

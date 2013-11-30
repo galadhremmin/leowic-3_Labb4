@@ -9,6 +9,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AldCardSideView.h"
 #import "UIView+Glow.h"
+#import "UIView+Effects.h"
 
 @interface AldCardSideView ()
 
@@ -41,30 +42,11 @@
         return;
     }
     
-    // round the corners with a corner radius equivalent to 5 % of the square's width
-    // by creating a bezier path as an alpha mask.
-    CGFloat r = self.bounds.size.width * 0.05f;
-    
-    CAShapeLayer *maskLayer = [CAShapeLayer layer];
-    maskLayer.path = [UIBezierPath bezierPathWithRoundedRect:self.bounds
-                                           byRoundingCorners:UIRectCornerAllCorners
-                                                 cornerRadii:CGSizeMake(r, r)].CGPath;
-    
-    self.layer.mask = maskLayer;
+    [self effectRoundedCornersWithRadius:self.bounds.size.width * 0.05];
 }
 
 -(void) initContents
 {
-}
-
--(void) deselect
-{
-    [self stopGlowing];
-}
-
--(void) select
-{
-    [self startGlowingWithColor:[UIColor colorWithRed:144/255.0 green:0 blue:32/255.0 alpha:1] intensity:0.5];
 }
 
 @end

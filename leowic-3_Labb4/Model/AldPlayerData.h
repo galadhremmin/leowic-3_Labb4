@@ -11,7 +11,10 @@
 
 @interface AldPlayerData : AldJSONData
 
+@property(nonatomic) NSUInteger ID;
 @property(nonatomic) NSUInteger score;
+
+-(id) initWithID: (NSUInteger)ID score: (NSUInteger)score;
 
 -(void) scorePoints: (NSUInteger)points;
 

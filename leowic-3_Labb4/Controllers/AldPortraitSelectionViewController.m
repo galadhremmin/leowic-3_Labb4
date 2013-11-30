@@ -8,6 +8,9 @@
 
 #import "AldPortraitSelectionViewController.h"
 #import "AldViewController.h"
+#import "AldPortraitViewCell.h"
+#import "UIImage+BundleExtensions.h"
+#import "UIView+Effects.h"
 
 @interface AldPortraitSelectionViewController ()
 
@@ -16,6 +19,15 @@
 @end
 
 @implementation AldPortraitSelectionViewController
+
+-(void) viewDidLoad
+{
+    [super viewDidLoad];
+    
+    UITapGestureRecognizer *recogniser = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    recogniser.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:recogniser];
+}
 
 -(void) viewDidAppear: (BOOL)animated
 {
@@ -27,42 +39,57 @@
     _portraitCells = nil;
 }
 
-#pragma mark - Table view data source
+#pragma mark - Collection view cell
 
--(void) tableView: (UITableView *)tableView didSelectRowAtIndexPath: (NSIndexPath *)indexPath
+-(NSInteger) collectionView: (UICollectionView *)collectionView numberOfItemsInSection: (NSInteger)section
 {
-    // Deselect the cell
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    return 9;
+}
+
+-(NSInteger) numberOfSectionsInCollectionView: (UICollectionView *)collectionView
+{
+    return 1;
+}
+
+-(UICollectionViewCell *) collectionView: (UICollectionView *)collectionView cellForItemAtIndexPath: (NSIndexPath *)indexPath
+{
+    AldPortraitViewCell *cell = (AldPortraitViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:@"PortraitCell" forIndexPath:indexPath];
     
-    // The portraits are located in the first section. All other sections maintain
-    // regular behaviour patterns.
-    if (indexPath.section > 0) {
+    cell.portraitImagePath = [NSString stringWithFormat:@"elf%d.png", indexPath.row + 1];
+    [cell loadPortraitImage];
+    
+    return cell;
+}
+
+-(void) handleSingleTap: (UITapGestureRecognizer *)sender
+{
+    CGPoint coords = [sender locationInView:self.view];
+    // Acquire the superview fo the view the user tapped upon. Apparently, the UICollectionViewCell
+    // hit test results in an UIView of unknown origin, which is a direct descendant to the cell.
+    // For this reason, the superview is acquired, which ought to be an instance of the
+    // AldPortraitViewCell class.
+    UIView *view = [[self.view hitTest:coords withEvent:nil] superview];
+    
+    if (view == nil || ![view isKindOfClass:[AldPortraitViewCell class]]) {
         return;
     }
     
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if (cell != nil) {
+    [view effectTriggerSelection];
+    
+    if (view.effectSelected) {
         
-        if ([_portraitCells containsObject:cell]) {
-            // A portrait tapped on is already chosen, so deselect it.
-            [_portraitCells removeObject:cell];
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            
-        } else {
-            // The maximum number of portraits have been selected, so deselect the portrait
-            // last tapped on, so the one recently tapped upon can move in to replace it.
-            if (_numberOfPlayers == _portraitCells.count) {
-                UITableViewCell *cell = [_portraitCells objectAtIndex:_portraitCells.count - 1];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                [_portraitCells removeObject:cell];
-            }
-            
-            // Choose the portrait tapped upon.
-            [_portraitCells addObject:cell];
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        if (_portraitCells.count >= _numberOfPlayers) {
+            // If the  maximum number of players already have been selected, deselect the
+            // oldest one, and replace it with the new.
+            AldPortraitViewCell *previousView = [_portraitCells objectAtIndex:0];
+            [previousView effectTriggerSelection];
+            [_portraitCells removeObject:previousView];
+            previousView = nil;
         }
         
-        [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        [_portraitCells addObject:view];
+    } else {
+        [_portraitCells removeObject:view];
     }
 }
 
@@ -88,8 +115,8 @@
     AldViewController *destinationController = (AldViewController *)segue.destinationViewController;
     NSMutableArray *portraits = [[NSMutableArray alloc] initWithCapacity:_numberOfPlayers];
     
-    for (UITableViewCell *cell in _portraitCells) {
-        [portraits addObject:cell.imageView.image];
+    for (AldPortraitViewCell *cell in _portraitCells) {
+        [portraits addObject:cell.portraitImagePath];
     }
     
     [destinationController createPlayersWithPortraits: portraits];

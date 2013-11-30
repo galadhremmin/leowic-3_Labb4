@@ -9,6 +9,7 @@
 #import "AldCardSidesViewContainer.h"
 #import "AldCardFrontView.h"
 #import "AldCardBackView.h"
+#import "AldTimingConstants.h"
 
 @interface AldCardSidesViewContainer()
 
@@ -62,7 +63,7 @@
     // upon finishing the transition.
     [UIView transitionFromView:sourceView
                         toView:oppositeView
-                      duration:2
+                      duration:kAldTimingCardFlippingDuration
                        options:UIViewAnimationOptionTransitionFlipFromLeft
                     completion:^(BOOL finished) {
                         if (completedHandler != nil) {

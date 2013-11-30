@@ -8,13 +8,13 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import "AldTimingConstants.h"
+#import "UIView+Effects.h"
 #import "UIImage+BundleExtensions.h"
 #import "AldViewController.h"
 #import "AldCardBackView.h"
 #import "AldCardData.h"
 #import "AldPlayerWrapper.h"
-
-#define kNumberOfSimultaneousCardSelections (2)
 
 @interface AldViewController()
 
@@ -66,15 +66,15 @@
 
 #pragma mark - Game graphics core
 
--(void) createPlayersWithPortraits: (NSArray *)portraits
+-(void) createPlayersWithPortraits: (NSArray *)portraitPaths
 {
-    if (portraits == nil) {
+    if (portraitPaths == nil || portraitPaths.count < 1) {
         return;
     }
     
-    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:portraits.count];
-    for (UIImage *portrait in portraits) {
-        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithIndex:players.count portrait:portrait];
+    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:portraitPaths.count];
+    for (NSString *portraitPath in portraitPaths) {
+        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithID:players.count + 1 portraitPath:portraitPath];
         [players addObject:wrapper];
     }
     
@@ -113,7 +113,7 @@
     // Lay out the memory cards on the table.
     //
     _cards = [[NSMutableArray alloc] initWithCapacity:numberOfCards];
-    for (int i = 0, x = 0, y = 0; i < numberOfCards; i += 1) {
+    for (NSUInteger i = 0, x = 0, y = 0; i < numberOfCards; i += 1) {
         
         CGRect frame = CGRectMake(0, 0, cardSize, cardSize);
         
@@ -129,7 +129,7 @@
         
         // Rotate the cards randomly, giving the impression of a proper board
         int angle = (int) arc4random_uniform(8) - 4; // -4 to +4
-        rotationView.transform = CGAffineTransformMakeRotation(angle*M_PI/180.0);
+        [UIView view:rotationView rotateByDegrees:angle];
         
         // Store the card so that it will be retained, and add the card's front view to the rotation view, which
         // in turn is passed along to the UIScrollView.
@@ -139,7 +139,7 @@
         
         // Debug information
 #if DEBUG
-        NSLog(@"%d: %d %d",  i, x, y);
+    NSLog(@"%d: %d %d",  i, x, y);
 #endif
         
         // Increment X and Y. The map being a perfect square, Y is incremented with even division.
@@ -154,7 +154,7 @@
     // Lay out the player portraits
     //
     NSArray *portraitViews = @[_firstPlayerView, _secondPlayerView];
-    for (int i = 0; i < portraitViews.count; i += 1) {
+    for (NSUInteger i = 0; i < portraitViews.count; i += 1) {
         UIImageView *portraitView = [portraitViews objectAtIndex:i];
         
         portraitView.hidden = i >= _players.count;
@@ -163,11 +163,8 @@
         }
 
         AldPlayerWrapper *wrapper = [_players objectAtIndex:i];
-        portraitView.image = wrapper.portrait;
-        portraitView.backgroundColor = [UIColor redColor];
-        
+        portraitView.image = [UIImage imageFromBundle:wrapper.portraitPath];
         wrapper.portraitView = portraitView;
-        wrapper.portrait     = nil;
     }
     
     // Configure the subview for the scroll view, disabling auto resizing
@@ -184,6 +181,8 @@
     // Remove all other subviews and add the map view to the scroll view.
     [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_scrollView addSubview:mapView];
+    
+    [_willOWisp moveToView:_firstPlayerView];
 }
 
 -(void) calculateScale: (BOOL)animated
@@ -224,12 +223,20 @@
 
 -(void) flipCardsToBack
 {
-    __block BOOL matches = [self selectedCardsVariantsMatch];
+    NSUInteger indexes[_selectedCards.count];
+    for (NSUInteger i = 0; i < _selectedCards.count; i += 1) {
+        AldCardSideView *card = [_selectedCards objectAtIndex:i];
+        indexes[i] = card.associatedCard.index;
+    }
+
+    __block BOOL matches = [_model flipCards:indexes];
     __block NSObject *controller = self;
+    
+    [self performSelector:@selector(playerMoveFeedback:) withObject:[NSNumber numberWithBool:matches] afterDelay:kAldTimingSuccessFeedbackDuration];
     
     for (AldCardSideView *cardSideView in _selectedCards) {
         // Deselect the card view as the animation will ensue
-        [cardSideView deselect];
+        [cardSideView effectDeselect];
         
         __block AldCardSidesViewContainer* card = cardSideView.associatedCard;
         
@@ -254,11 +261,7 @@
             
             if (!matches) {
                 // Sleep for one second , giving the player a chance to memorize the cards.
-                [controller performSelector:@selector(flipCardsToFront:) withObject:destinationView afterDelay:1];
-            } else {
-                @synchronized(_selectedCards) {
-                    [_selectedCards removeAllObjects];
-                }
+                [controller performSelector:@selector(flipCardsToFront:) withObject:destinationView afterDelay:kAldTimingCardViewingDuration];
             }
         }];
     }
@@ -274,33 +277,19 @@
         cardBackSideView.detailsDescriptionLabel.text = nil;
         cardBackSideView.detailsTitleLabel.text = nil;
         [cardBackSideView removeFromSuperview];
-        
-        @synchronized(_selectedCards) {
-            [_selectedCards removeAllObjects];
-        }
     }];
 }
 
--(BOOL) selectedCardsVariantsMatch
+-(void) playerMoveFeedback: (NSNumber *)matches
 {
-    NSUInteger variant = 0, i = 0;
+    AldPlayerData *currentPlayer = [_model currentPlayer];
+    AldPlayerWrapper *portrait = [_players objectAtIndex:currentPlayer.ID - 1];
     
-    for (; i < [_selectedCards count]; i += 1) {
-        AldCardSideView *cardSideView = (AldCardSideView *)[_selectedCards objectAtIndex:i];
-        AldCardData *currentVariant = [_model dataForIndex:cardSideView.associatedCard.index];
-        
-        if (i < 1) {
-            // First iteration - assign to the variant variable
-            variant = currentVariant.hash;
-        } else if (variant != currentVariant.hash) {
-            // All subsequent iterations - compare the variant with the initial variant. If it
-            // isn't the same, the cards aren't the same.
-            return NO;
-        }
+    [_willOWisp moveToView:portrait.portraitView];
+    
+    @synchronized(_selectedCards) {
+        [_selectedCards removeAllObjects];
     }
-    
-    // Two cards are expected
-    return i == kNumberOfSimultaneousCardSelections;
 }
 
 #pragma mark - Card tapping events
@@ -308,7 +297,7 @@
 -(void) handleCardTap: (UITapGestureRecognizer *)sender
 {
     // You can't flip another set of card if cards are already flipping
-    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
+    if ([_selectedCards count] >= kAldNumberOfSimultaneousCardSelections) {
         return;
     }
     
@@ -328,26 +317,26 @@
     
     // Allocate a mutable array with the capacity of two cards simultaneously selected.
     if (_selectedCards == nil) {
-        _selectedCards = [[NSMutableArray alloc] initWithCapacity:kNumberOfSimultaneousCardSelections];
+        _selectedCards = [[NSMutableArray alloc] initWithCapacity:kAldNumberOfSimultaneousCardSelections];
     }
     
     @synchronized(_selectedCards) {
-        if ([_selectedCards count] < kNumberOfSimultaneousCardSelections) {
+        if ([_selectedCards count] < kAldNumberOfSimultaneousCardSelections) {
             if ([_selectedCards containsObject:cardView]) {
                 // The card already exists in the collection - deselect it
-                [cardView deselect];
+                [cardView effectDeselect];
                 [_selectedCards removeObject:cardView];
             } else {
                 // The card doesn't exist in the collection with selected cards. Select it.
-                [cardView select];
+                [cardView effectSelect];
                 [_selectedCards addObject:cardView];
             }
         }
     }
     
-    if ([_selectedCards count] >= kNumberOfSimultaneousCardSelections) {
-        // Flip the card after two seconds of flashing
-        [self performSelector:@selector(flipCardsToBack) withObject:nil afterDelay:2];
+    if ([_selectedCards count] >= kAldNumberOfSimultaneousCardSelections) {
+        // View the cards for a while, then flip them around
+        [self performSelector:@selector(flipCardsToBack) withObject:nil afterDelay:kAldTimingCardBeforeFlippingDuration];
     }
 }
 
