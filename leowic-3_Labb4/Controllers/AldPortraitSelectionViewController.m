@@ -29,14 +29,20 @@
     [self.view addGestureRecognizer:recogniser];
 }
 
--(void) viewDidAppear: (BOOL)animated
+-(void) viewWillAppear: (BOOL)animated
 {
     _portraitCells = [[NSMutableArray alloc] initWithCapacity:_numberOfPlayers];
 }
 
--(void) viewDidDisappear: (BOOL)animated
+-(void) viewWillDisappear: (BOOL)animated
 {
-    _portraitCells = nil;
+    if (_portraitCells != nil) {
+        for (AldPortraitViewCell *cell in _portraitCells) {
+            [cell effectDeselect];
+        }
+        
+        _portraitCells = nil;
+    }
 }
 
 #pragma mark - Collection view cell

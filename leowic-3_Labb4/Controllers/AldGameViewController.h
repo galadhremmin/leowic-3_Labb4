@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 #import "AldGameModel.h"
 #import "AldCardSideView.h"
 #import "AldWillOWispView.h"
@@ -22,5 +23,6 @@
 @property (strong, nonatomic)          AldGameModel     *model;
 @property (strong, nonatomic)          NSArray          *playerPortraitPaths;
 @property (strong, atomic)             NSArray          *players;
+@property (strong, nonatomic)          AVAudioPlayer    *backgroundMusicPlayer;
 
 @end

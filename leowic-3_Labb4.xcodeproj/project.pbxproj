@@ -23,6 +23,10 @@
 		D73C3753184E834400D5D051 /* AldDataCore.m in Sources */ = {isa = PBXBuildFile; fileRef = D73C3752184E834400D5D051 /* AldDataCore.m */; };
 		D73C3755184E86C100D5D051 /* Managed objects in Resources */ = {isa = PBXBuildFile; fileRef = D73C3754184E86C100D5D051 /* Managed objects */; };
 		D73C3773184E9EC400D5D051 /* AldMainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */; };
+		D75D4A5E184FD76300E9FDD9 /* AldHighscoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75D4A5D184FD76300E9FDD9 /* AldHighscoreViewController.m */; };
+		D75D4A61184FD98800E9FDD9 /* AldHighscoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D75D4A60184FD98800E9FDD9 /* AldHighscoreCell.m */; };
+		D75D4A64184FE64E00E9FDD9 /* Lost Frontier.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D75D4A63184FE64E00E9FDD9 /* Lost Frontier.mp3 */; };
+		D75D4A66184FE67800E9FDD9 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75D4A65184FE67800E9FDD9 /* AudioToolbox.framework */; };
 		D77D0DC8184A51BF0000A354 /* flare.png in Resources */ = {isa = PBXBuildFile; fileRef = D77D0DC7184A51BF0000A354 /* flare.png */; };
 		D77D0DCB184A5CAB0000A354 /* AldPortraitViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D77D0DCA184A5CAB0000A354 /* AldPortraitViewCell.m */; };
 		D77D0DCF184A5FD50000A354 /* UIView+Effects.m in Sources */ = {isa = PBXBuildFile; fileRef = D77D0DCE184A5FD50000A354 /* UIView+Effects.m */; };
@@ -88,6 +92,12 @@
 		D73C3754184E86C100D5D051 /* Managed objects */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Managed objects"; sourceTree = "<group>"; };
 		D73C3771184E9EC400D5D051 /* AldMainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldMainMenuViewController.h; sourceTree = "<group>"; };
 		D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldMainMenuViewController.m; sourceTree = "<group>"; };
+		D75D4A5C184FD76300E9FDD9 /* AldHighscoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreViewController.h; sourceTree = "<group>"; };
+		D75D4A5D184FD76300E9FDD9 /* AldHighscoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreViewController.m; sourceTree = "<group>"; };
+		D75D4A5F184FD98800E9FDD9 /* AldHighscoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreCell.h; sourceTree = "<group>"; };
+		D75D4A60184FD98800E9FDD9 /* AldHighscoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreCell.m; sourceTree = "<group>"; };
+		D75D4A63184FE64E00E9FDD9 /* Lost Frontier.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Lost Frontier.mp3"; sourceTree = "<group>"; };
+		D75D4A65184FE67800E9FDD9 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D77D0DC7184A51BF0000A354 /* flare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flare.png; sourceTree = "<group>"; };
 		D77D0DC9184A5CAB0000A354 /* AldPortraitViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPortraitViewCell.h; sourceTree = "<group>"; };
 		D77D0DCA184A5CAB0000A354 /* AldPortraitViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPortraitViewCell.m; sourceTree = "<group>"; };
@@ -142,6 +152,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D75D4A66184FE67800E9FDD9 /* AudioToolbox.framework in Frameworks */,
 				D73C3706184E812400D5D051 /* CoreData.framework in Frameworks */,
 				D70738A718327552007FF061 /* CoreGraphics.framework in Frameworks */,
 				D70738A918327552007FF061 /* UIKit.framework in Frameworks */,
@@ -183,6 +194,7 @@
 		D70738A318327552007FF061 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D75D4A65184FE67800E9FDD9 /* AudioToolbox.framework */,
 				D73C3705184E812400D5D051 /* CoreData.framework */,
 				D70738A418327552007FF061 /* Foundation.framework */,
 				D70738A618327552007FF061 /* CoreGraphics.framework */,
@@ -235,6 +247,14 @@
 				D70738DB1832777A007FF061 /* AldGameViewController.m */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		D75D4A62184FE64500E9FDD9 /* Music */ = {
+			isa = PBXGroup;
+			children = (
+				D75D4A63184FE64E00E9FDD9 /* Lost Frontier.mp3 */,
+			);
+			name = Music;
 			sourceTree = "<group>";
 		};
 		D78E4CA31844F3E0006FDC8B /* Portraits */ = {
@@ -312,6 +332,7 @@
 		D7C3B265183936CB0013DD81 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				D75D4A62184FE64500E9FDD9 /* Music */,
 				D7D53ED8184E73A200D8DCF1 /* picture-frame.png */,
 				D77D0DC7184A51BF0000A354 /* flare.png */,
 				D78E4CA31844F3E0006FDC8B /* Portraits */,
@@ -415,6 +436,7 @@
 				D78E4CB11844F3E1006FDC8B /* elf5.png in Resources */,
 				D70738BD18327552007FF061 /* Images.xcassets in Resources */,
 				D70738AF18327552007FF061 /* InfoPlist.strings in Resources */,
+				D75D4A64184FE64E00E9FDD9 /* Lost Frontier.mp3 in Resources */,
 				D78E4CB21844F3E1006FDC8B /* elf6.png in Resources */,
 				D77D0DC8184A51BF0000A354 /* flare.png in Resources */,
 				D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */,

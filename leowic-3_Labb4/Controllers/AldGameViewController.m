@@ -8,6 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
+#import <AudioToolbox/AudioToolbox.h>
 #import "AldConstants.h"
 #import "UIView+Effects.h"
 #import "UIImage+BundleExtensions.h"
@@ -42,9 +43,30 @@
     [self configure];
 }
 
+-(void) viewWillAppear: (BOOL)animated
+{
+    if (_backgroundMusicPlayer != nil) {
+        return;
+    }
+    
+    NSString *soundFilePath = [[NSBundle mainBundle] pathForResource:@"Lost Frontier" ofType:@"mp3"];
+    NSURL *soundFileURL = [NSURL fileURLWithPath:soundFilePath];
+    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:soundFileURL error:nil];
+    player.numberOfLoops = -1; //infinite
+    player.volume = 1.0;
+    
+    [player play];
+    _backgroundMusicPlayer = player;
+}
+
 -(void) viewWillDisappear: (BOOL)animated
 {
     [self unload];
+    
+    if (_backgroundMusicPlayer != nil) {
+        [_backgroundMusicPlayer stop];
+        _backgroundMusicPlayer = nil;
+    }
 }
 
 -(void) didReceiveMemoryWarning
