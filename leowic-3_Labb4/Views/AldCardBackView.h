@@ -12,6 +12,5 @@
 
 @property(nonatomic, weak) UILabel     *detailsTitleLabel;
 @property(nonatomic, weak) UILabel     *detailsDescriptionLabel;
-@property(nonatomic, weak) UIImageView *portraitView;
 
 @end

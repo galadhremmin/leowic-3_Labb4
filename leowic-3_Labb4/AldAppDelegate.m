@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 LTU. All rights reserved.
 //
 
+#import <CoreData/CoreData.h>
 #import "AldAppDelegate.h"
 #import "UIImage+BundleExtensions.h"
 

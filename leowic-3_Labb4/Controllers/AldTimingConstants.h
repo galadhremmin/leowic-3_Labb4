@@ -10,4 +10,5 @@
 #define kAldTimingCardFlippingDuration       (2.0f)
 #define kAldTimingCardViewingDuration        (1.5f)
 #define kAldTimingSuccessFeedbackDuration    (3.5f)
+#define kAldCardRemovalEffectDuration        (2.5f)
 #define kAldTimingWillOWispMovementDuration  (0.5f)

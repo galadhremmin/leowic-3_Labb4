@@ -11,16 +11,16 @@
 #import "AldCardSideView.h"
 #import "AldWillOWispView.h"
 
-@interface AldViewController : UIViewController<UIScrollViewDelegate>
+@interface AldGameViewController : UIViewController<UIScrollViewDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIScrollView     *scrollView;
-@property (weak, nonatomic)   IBOutlet UIImageView      *firstPlayerView;
-@property (weak, nonatomic)   IBOutlet UIImageView      *secondPlayerView;
+@property (weak, nonatomic)   IBOutlet UIImageView      *player1View;
+@property (weak, nonatomic)   IBOutlet UIImageView      *player2View;
+@property (weak, nonatomic)   IBOutlet UIImageView      *player1FrameView;
+@property (weak, nonatomic)   IBOutlet UIImageView      *player2FrameView;
 @property (weak, nonatomic)   IBOutlet AldWillOWispView *willOWisp;
-@property (weak, nonatomic)            UIView           *subview;
 @property (strong, nonatomic)          AldGameModel     *model;
+@property (strong, nonatomic)          NSArray          *playerPortraitPaths;
 @property (strong, atomic)             NSArray          *players;
-
--(void) createPlayersWithPortraits: (NSArray *)portraitPaths;
 
 @end

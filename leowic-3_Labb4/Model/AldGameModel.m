@@ -11,15 +11,38 @@
 
 @interface AldGameModel ()
 
-@property(nonatomic) NSMutableArray  *map;
-@property(nonatomic) NSUInteger       currentPlayerIndex;
-@property(nonatomic, strong) NSArray *players;
+@property(nonatomic)         NSUInteger       currentPlayerIndex;
+@property(nonatomic)         NSUInteger       cardsLeftToFlip;
+@property(nonatomic, strong) NSMutableArray  *map;
+@property(nonatomic, strong) AldGameEntity   *modelEntity;
 
 @end
 
 @implementation AldGameModel
 
--(id) initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)numberOfPlayers
+#pragma mark - Initialization
+
++(AldGameModel *) modelFromDataCore
+{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    AldDataCore *core = [AldDataCore defaultCore];
+    
+    NSEntityDescription *gameEntity = [NSEntityDescription entityForName:kAldDataCoreGameEntityName inManagedObjectContext:core.managedObjectContext];
+    
+    fetchRequest.entity = gameEntity;
+    fetchRequest.fetchLimit = 1;
+    
+    NSError *error = nil;
+    NSArray *entities = [core.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (entities == nil || entities.count < 1) {
+        return nil;
+    }
+    
+    AldGameEntity *entity = (AldGameEntity *) [entities objectAtIndex:0];
+    return [[AldGameModel alloc] initWithEntity:entity];
+}
+
+-(id) initWithNumberOfCards: (NSUInteger)numberOfCards playersWithPortraits: (NSArray *)playerPortraitPaths
 {
     self = [super init];
     if (self) {
@@ -38,38 +61,57 @@
         
         _cardsPerRow = cardsPerRow;
         
-        [self preparePlayers:numberOfPlayers];
+        [self preparePlayers:playerPortraitPaths];
         [self prepareCards];
     }
     
     return self;
 }
 
--(void) preparePlayers: (NSUInteger)numberOfPlayers
+-(id) initWithEntity: (AldGameEntity *)modelEntity
 {
-    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:numberOfPlayers];
-    
-    for (NSUInteger i = 0; i < numberOfPlayers; i += 1) {
-        AldPlayerData *player = [[AldPlayerData alloc] initWithID:i + 1 score:0];
-        [players addObject:player];
+    self = [super init];
+    if (self) {
+        _modelEntity = modelEntity;
+        [self loadFromEntity];
+    }
+    return self;
+}
+
+#pragma mark - Game logic
+
+-(void) preparePlayers: (NSArray *)playerPortraitPaths
+{
+    if (playerPortraitPaths == nil || playerPortraitPaths.count < 1) {
+        [NSException raise:@"Erroneous number of players." format:@"At least one player portrait has to be specified"];
     }
     
-    [self setPlayers:players];
-    [self setCurrentPlayerIndex:0];
+    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:playerPortraitPaths.count];
+    NSUInteger playerID = 1;
+    
+    for (NSString *portraitPath in playerPortraitPaths) {
+        AldPlayerData *player = [[AldPlayerData alloc] initWithID:playerID score:0 portrait:portraitPath];
+        [players addObject:player];
+        
+        playerID += 1;
+    }
+    
+    _players = players;
+    _currentPlayerIndex = 0;
 }
 
 -(void) prepareCards
-{
+{    
     // Calculate number of cards which will be in play. This is the square of the number of
     // cards per row.
-    NSUInteger totalNumberOfCards = _cardsPerRow * _cardsPerRow;
+    _cardsLeftToFlip = _cardsPerRow * _cardsPerRow;
     
     // Declare a few utility variables.
     NSUInteger i, n, iterations, i0, i1;
 
     // Initialize the map with enough capacity to hold all cards.
     if (_map == nil) {
-        _map = [[NSMutableArray alloc] initWithCapacity:totalNumberOfCards];
+        _map = [[NSMutableArray alloc] initWithCapacity:_cardsLeftToFlip];
     } else {
         [_map removeAllObjects];
     }
@@ -79,7 +121,7 @@
     NSArray *tengwarSymbols = [self collectVariants:_cardsPerRow * 2];
     
     // Adds the cards to the map sequentially, in the given order.
-    for (i = 0, n = 1; i < totalNumberOfCards; i += 1) {
+    for (i = 0, n = 1; i < _cardsLeftToFlip; i += 1) {
         AldCardData *cardData = [tengwarSymbols objectAtIndex:n - 1];
         [_map insertObject:cardData atIndex:i];
         
@@ -89,21 +131,26 @@
     }
     
     // Scramble the cards a bit, as they are in order.
-    iterations = totalNumberOfCards * 5; // number of iterations, the higher the better randomness!
+    iterations = _cardsLeftToFlip * 5; // number of iterations, the higher the better randomness!
     for (i = 0; i < iterations; i += 1) {
         
-        i0 = i % totalNumberOfCards;
-        i1 = arc4random_uniform(totalNumberOfCards);
+        i0 = i % _cardsLeftToFlip;
+        i1 = arc4random_uniform(_cardsLeftToFlip);
         
         if (i0 != i1) {
             [_map exchangeObjectAtIndex:i1 withObjectAtIndex:i0];
         }
     }
     
-    for (i = 0; i < totalNumberOfCards; i += 1) {
-        NSLog(@"%d: %@", i + 1, [[_map objectAtIndex:i] title]);
-    }
+    // Deassociate the model entity with the model, if there is one. This will force
+    // the persist method to save a new instance of the game model, in contrast to
+    // just updating the existing.
+    _modelEntity = nil;
+    
+    // Persist the game.
+    [self persist];
 }
+
 
 -(AldCardData *) dataForIndex: (NSUInteger)index
 {
@@ -190,9 +237,15 @@
     }
     
     NSUInteger variant = 0;
+    NSUInteger i;
     BOOL matches = YES;
-    for (NSUInteger i = 0; i < kAldNumberOfSimultaneousCardSelections; i += 1) {
+    for (i = 0; i < kAldNumberOfSimultaneousCardSelections; i += 1) {
         AldCardData *data = [self dataForIndex:indexes[i]];
+        
+        // collect cards can't be flipped again
+        if (data.collected) {
+            return false;
+        }
         
         if (variant < 1) {
             variant = data.hash;
@@ -206,10 +259,21 @@
     
     if (matches) {
         [player scorePoints:_map.count];
-    } else {
-        NSUInteger newScore = player.score;
-        NSUInteger penalty = _map.count / 4;
+        _cardsLeftToFlip -= kAldNumberOfSimultaneousCardSelections;
         
+        // Assign the collected state to the cards associated with this instruction
+        for (i = 0; i < kAldNumberOfSimultaneousCardSelections; i += 1) {
+            AldCardData *data = [self dataForIndex:indexes[i]];
+            data.collected = YES;
+        }
+        
+    } else {
+        
+        NSUInteger newScore = player.score;
+        NSUInteger penalty = _map.count / 4; // Penalize 1/4 of the number of items
+        
+        // The score variables are unsigned, which is why this check is necessary to
+        // avoid integer overflow.
         if (newScore < penalty) {
             newScore = 0;
         } else {
@@ -220,7 +284,21 @@
     }
     
     [self switchPlayers];
+    [self persist];
+    
     return matches;
+}
+
+-(AldPlayerData *) previousPlayer
+{
+    NSUInteger index = _currentPlayerIndex;
+    if (index < 1) {
+        index = _players.count - 1;
+    } else {
+        index -= 1;
+    }
+    
+    return [_players objectAtIndex:_currentPlayerIndex];
 }
 
 -(AldPlayerData *)currentPlayer
@@ -236,6 +314,130 @@
     }
     
     [self setCurrentPlayerIndex:currentPlayer];
+}
+
+#pragma mark - Persistence
+
+-(void) persist
+{
+    NSUInteger i;
+    
+    AldDataCore *core = [AldDataCore defaultCore];
+    AldGameEntity *gameEntity = _modelEntity;
+    
+    // If there is no game entity associated with this model, this is a new game which
+    // should be inserted in the database.
+    if (gameEntity == nil) {
+        gameEntity = [NSEntityDescription insertNewObjectForEntityForName:kAldDataCoreGameEntityName inManagedObjectContext:core.managedObjectContext];
+        
+        gameEntity.cardsPerRow = [NSNumber numberWithUnsignedInteger:_cardsPerRow];
+        gameEntity.dateBegun   = [NSDate date];
+    }
+    
+    // Always update the current player, as it changes with every round.
+    gameEntity.currentPlayerID = [NSNumber numberWithUnsignedInteger:_currentPlayerIndex];
+    
+    NSArray *entities = [gameEntity.cards allObjects];
+    BOOL newEntity = NO;
+    for (i = 0; i < _cardsLeftToFlip; i += 1) {
+        AldGameCardEntity *cardEntity = nil;
+        newEntity = NO;
+        
+        if (entities.count > i) {
+            cardEntity = [entities objectAtIndex:i];
+        }
+        
+        // If the entity is nil, it doesn't exist. Create one for this card.
+        if (cardEntity == nil) {
+            cardEntity = [NSEntityDescription insertNewObjectForEntityForName:kAldDataCoreGameCardEntityName inManagedObjectContext:core.managedObjectContext];
+            newEntity = YES;
+        }
+        
+        AldCardData *cardData = [_map objectAtIndex:i];
+        cardEntity.cardTitle       = cardData.title;
+        cardEntity.cardDescription = cardData.description;
+        cardEntity.collected       = [NSNumber numberWithBool:cardData.collected];
+        cardEntity.index           = [NSNumber numberWithUnsignedInteger:i];
+        
+        if (newEntity) {
+            [gameEntity addCardsObject:cardEntity];
+        }
+    }
+    
+    entities = [gameEntity.players allObjects];
+    for (i = 0; i < _players.count; i += 1) {
+        AldPlayerEntity *playerEntity = nil;
+        newEntity = NO;
+        
+        if (entities.count > 1) {
+            playerEntity = [entities objectAtIndex:i];
+        }
+        
+        // If the player entity is nil, it doesn't exist. Create one for this player.
+        if (playerEntity == nil) {
+            playerEntity = [NSEntityDescription insertNewObjectForEntityForName:kAldDataCorePlayerEntityName inManagedObjectContext:core.managedObjectContext];
+            newEntity = YES;
+        }
+        
+        AldPlayerData *playerData = [_players objectAtIndex:i];
+        playerEntity.index    = [NSNumber numberWithUnsignedInteger:i];
+        playerEntity.score    = [NSNumber numberWithUnsignedInteger:playerData.score];
+        playerEntity.portrait = playerData.portraitPath;
+        
+        if (newEntity) {
+            [gameEntity addPlayersObject:playerEntity];
+        }
+    }
+    
+    [core saveChanges];
+    
+    // Store a reference to the game entity, so that the next time this selector is invoked,
+    // the entity is updated instead.
+    _modelEntity = gameEntity;
+}
+
+-(void) loadFromEntity
+{
+    if (_modelEntity == nil) {
+        [NSException raise:@"Failed to load from entity." format:@"No entity appointed! Make sure to initialize the instance of the data model using the initWithEntity selector."];
+    }
+    
+    AldGameEntity *data = _modelEntity;
+    
+    // Restore basic game logic
+    _currentPlayerIndex = [data.currentPlayerID unsignedIntegerValue];
+    
+    // Restore the cards (the "map")
+    _cardsPerRow = [data.cardsPerRow unsignedIntegerValue];
+    _map = [[NSMutableArray alloc] initWithCapacity:_cardsPerRow * _cardsPerRow];
+
+    // Fill the array with null, to be sure that the space is allocated
+    NSUInteger i = 0;
+    for ( ; i < data.cards.count; i += 1) {
+        [_map addObject:[NSNull null]];
+    }
+    
+    for (AldGameCardEntity *cardEntity in data.cards) {
+        AldCardData *cardData = [[AldCardData alloc] initWithTitle:cardEntity.cardTitle description:cardEntity.cardDescription];
+        cardData.collected = [cardEntity.collected boolValue];
+        
+        [_map replaceObjectAtIndex:[cardEntity.index unsignedIntegerValue] withObject:cardData];
+    }
+    
+    // Restore the players
+    NSMutableArray *players;
+    
+    _players = players = [[NSMutableArray alloc] initWithCapacity:data.players.count];
+    
+    for (i = 0; i < data.players.count; i += 1) {
+        [players addObject:[NSNull null]];
+    }
+    
+    for (AldPlayerEntity *playerEntity in data.players) {
+        AldPlayerData *playerData = [[AldPlayerData alloc] initWithID:[playerEntity.index unsignedIntegerValue] + 1 score:[playerEntity.score unsignedIntegerValue] portrait:playerEntity.portrait];
+        
+        [players replaceObjectAtIndex:[playerEntity.index unsignedIntegerValue] withObject:playerData];
+    }
 }
 
 @end

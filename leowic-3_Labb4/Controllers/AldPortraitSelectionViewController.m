@@ -7,7 +7,7 @@
 //
 
 #import "AldPortraitSelectionViewController.h"
-#import "AldViewController.h"
+#import "AldGameViewController.h"
 #import "AldPortraitViewCell.h"
 #import "UIImage+BundleExtensions.h"
 #import "UIView+Effects.h"
@@ -112,14 +112,14 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    AldViewController *destinationController = (AldViewController *)segue.destinationViewController;
+    AldGameViewController *destinationController = (AldGameViewController *)segue.destinationViewController;
     NSMutableArray *portraits = [[NSMutableArray alloc] initWithCapacity:_numberOfPlayers];
     
     for (AldPortraitViewCell *cell in _portraitCells) {
         [portraits addObject:cell.portraitImagePath];
     }
     
-    [destinationController createPlayersWithPortraits: portraits];
+    destinationController.playerPortraitPaths = portraits;
 }
 
 @end

@@ -9,19 +9,38 @@
 #import <Foundation/Foundation.h>
 #import "AldCardData.h"
 #import "AldPlayerData.h"
+#import "AldDataCore.h"
 
 #define kAldNumberOfSimultaneousCardSelections (2)
 
 @interface AldGameModel : NSObject
 
-@property(nonatomic) NSUInteger cardsPerRow;
+#pragma mark - Properties
 
--(id)              initWithNumberOfCards: (NSUInteger)numberOfCards players: (NSUInteger)numberOfPlayers;
--(void)            preparePlayers: (NSUInteger)numberOfPlayers;
+@property(nonatomic)                   NSUInteger  cardsPerRow;
+@property(nonatomic, readonly)         NSUInteger  cardsLeftToFlip;
+@property(nonatomic, strong, readonly) NSArray    *players;
+
+#pragma mark - Initialization
+
++(AldGameModel *) modelFromDataCore;
+
+-(id)              initWithNumberOfCards: (NSUInteger)numberOfCards playersWithPortraits: (NSArray *)playerPortraitPaths;
+-(id)              initWithEntity: (AldGameEntity *)modelEntity;
+
+#pragma mark - Game logic
+
+-(void)            preparePlayers: (NSArray *)playerPortraitPaths;
 -(void)            prepareCards;
 -(AldCardData *)   dataForIndex: (NSUInteger)index;
 -(BOOL)            flipCards: (NSUInteger *)indexes;
+-(AldPlayerData *) previousPlayer;
 -(AldPlayerData *) currentPlayer;
 -(void)            switchPlayers;
+
+#pragma mark - Persistence
+
+-(void)            persist;
+-(void)            loadFromEntity;
 
 @end

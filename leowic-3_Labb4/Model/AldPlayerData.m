@@ -10,12 +10,13 @@
 
 @implementation AldPlayerData
 
--(id) initWithID: (NSUInteger)ID score: (NSUInteger)score
+-(id) initWithID: (NSUInteger)ID score: (NSUInteger)score portrait: (NSString *)portraitPath
 {
     self = [super init];
     if (self) {
         _ID = ID;
         _score = score;
+        _portraitPath = portraitPath;
     }
     return self;
 }

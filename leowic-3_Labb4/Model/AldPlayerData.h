@@ -7,15 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AldJSONData.h"
 
-@interface AldPlayerData : AldJSONData
+@interface AldPlayerData : NSObject
 
-@property(nonatomic) NSUInteger ID;
-@property(nonatomic) NSUInteger score;
+@property(nonatomic)         NSUInteger  ID;
+@property(nonatomic)         NSUInteger  score;
+@property(strong, nonatomic) NSString   *portraitPath;
 
--(id) initWithID: (NSUInteger)ID score: (NSUInteger)score;
-
+-(id)  initWithID: (NSUInteger)ID score: (NSUInteger)score portrait: (NSString *)portraitPath;
 -(void) scorePoints: (NSUInteger)points;
 
 @end

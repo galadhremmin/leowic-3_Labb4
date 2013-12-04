@@ -11,19 +11,19 @@
 #import "AldTimingConstants.h"
 #import "UIView+Effects.h"
 #import "UIImage+BundleExtensions.h"
-#import "AldViewController.h"
+#import "AldGameViewController.h"
 #import "AldCardBackView.h"
 #import "AldCardData.h"
 #import "AldPlayerWrapper.h"
 
-@interface AldViewController()
+@interface AldGameViewController()
 
 @property(nonatomic, strong) NSMutableArray *cards;
 @property(nonatomic, strong) NSMutableArray *selectedCards;
 
 @end
 
-@implementation AldViewController
+@implementation AldGameViewController
 
 #pragma mark - View life-cycle delegation
 
@@ -40,6 +40,16 @@
     [_scrollView addGestureRecognizer:recogniser];
     
     [self configure];
+}
+
+-(void) viewWillDisappear: (BOOL)animated
+{
+    [self unload];
+}
+
+-(void) didReceiveMemoryWarning
+{
+    [self unload];
 }
 
 -(void) viewDidLayoutSubviews
@@ -66,28 +76,29 @@
 
 #pragma mark - Game graphics core
 
--(void) createPlayersWithPortraits: (NSArray *)portraitPaths
-{
-    if (portraitPaths == nil || portraitPaths.count < 1) {
-        return;
-    }
-    
-    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:portraitPaths.count];
-    for (NSString *portraitPath in portraitPaths) {
-        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithID:players.count + 1 portraitPath:portraitPath];
-        [players addObject:wrapper];
-    }
-    
-    _players = players;
-}
-
 -(void) configure
 {
-    if (_players == nil || _players.count < 1) {
-        [NSException raise:@"Invalid number of portraits." format:@"%d is not a valid number of portraits (i.e. players)", _players.count];
+    if (_model == nil) {
+        
+        if (_playerPortraitPaths == nil || _playerPortraitPaths.count < 1) {
+            [NSException raise:@"Invalid number of portraits." format:@"%d is not a valid number of portraits (i.e. players)", _players.count];
+        }
+        
+        _model = [[AldGameModel alloc] initWithNumberOfCards:16 playersWithPortraits:_playerPortraitPaths];
+        
+        // deallocate the portrait paths, as they are no longer required.
+        _playerPortraitPaths = nil;
     }
     
-    _model = [[AldGameModel alloc] initWithNumberOfCards:16 players:_players.count];
+    // The AldPlayerWrapper class for AldPlayerData adds informatin the views needs to visualize
+    // the players. So create an instance of this class per active player.
+    NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:_model.players.count];
+    for (AldPlayerData *playerData in _model.players) {
+        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithID:playerData.ID portraitPath:playerData.portraitPath];
+        
+        [players addObject:wrapper];
+    }
+    _players = players;
     
     // Map size (in number of cards per row)
     int cardsPerRow = _model.cardsPerRow;
@@ -119,6 +130,10 @@
         
         // Create a card with a front and back side
         AldCardSidesViewContainer *card = [[AldCardSidesViewContainer alloc] initWithFrame:frame index:i];
+        
+        // Hide the front of the card if it's already been collected. This can happen when restoring
+        // an older game.
+        card.frontView.hidden = [_model dataForIndex:i].collected;
         
         // Create a rotation view wherein the cards will rotate. This is necessary because the UIView
         // transition kit rotates the parent view as well.
@@ -153,11 +168,11 @@
     
     // Lay out the player portraits
     //
-    NSArray *portraitViews = @[_firstPlayerView, _secondPlayerView];
-    for (NSUInteger i = 0; i < portraitViews.count; i += 1) {
-        UIImageView *portraitView = [portraitViews objectAtIndex:i];
+    for (NSUInteger i = 0; i < 2; i += 1) {
+        UIImageView *portraitView = [self valueForKeyPath:[NSString stringWithFormat:@"player%dView", i + 1]];
+        UIImageView *frameView = [self valueForKeyPath:[NSString stringWithFormat:@"player%dFrameView", i + 1]];
         
-        portraitView.hidden = i >= _players.count;
+        portraitView.hidden = frameView.hidden = i >= _players.count;
         if (portraitView.hidden) {
             continue;
         }
@@ -165,6 +180,8 @@
         AldPlayerWrapper *wrapper = [_players objectAtIndex:i];
         portraitView.image = [UIImage imageFromBundle:wrapper.portraitPath];
         wrapper.portraitView = portraitView;
+        
+        [UIView view:frameView shadowWithOffset:CGSizeMake(3, 3) radius:3];
     }
     
     // Configure the subview for the scroll view, disabling auto resizing
@@ -179,10 +196,19 @@
     _scrollView.delegate            = self;
     
     // Remove all other subviews and add the map view to the scroll view.
-    [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_scrollView addSubview:mapView];
+}
+
+-(void) unload
+{
+    _selectedCards = nil;
+    _players = nil;
+    _cards   = nil;
     
-    [_willOWisp moveToView:_firstPlayerView];
+    [_model persist];
+    _model = nil;
+    
+    [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 -(void) calculateScale: (BOOL)animated
@@ -214,6 +240,10 @@
             break;
     }
     [_scrollView setZoomScale:_scrollView.minimumZoomScale animated:animated];
+    
+    // Center the wisp on the current player
+    AldPlayerWrapper *currentPlayer = (AldPlayerWrapper *) [_players objectAtIndex:[_model currentPlayer].ID - 1];
+    [_willOWisp setCenter:currentPlayer.portraitView.center];
     
     NSLog(@"Scroll view zoom levels: %f --> %f", _scrollView.minimumZoomScale, _scrollView.maximumZoomScale);
     NSLog(@"Scroll view frame: (%f, %f)", _scrollView.frame.size.width, _scrollView.frame.size.height);
@@ -261,13 +291,15 @@
             
             if (!matches) {
                 // Sleep for one second , giving the player a chance to memorize the cards.
-                [controller performSelector:@selector(flipCardsToFront:) withObject:destinationView afterDelay:kAldTimingCardViewingDuration];
+                [controller performSelector:@selector(flipCardToFront:) withObject:destinationView afterDelay:kAldTimingCardViewingDuration];
+            } else {
+                [controller performSelector:@selector(claimCard:) withObject:destinationView afterDelay:kAldTimingCardViewingDuration];
             }
         }];
     }
 }
 
--(void) flipCardsToFront: (AldCardSideView *)sourceView
+-(void) flipCardToFront: (AldCardSideView *)sourceView
 {
     // The two cards doesn't match--so flip right back.
     [sourceView.associatedCard flipFromView:sourceView configureDestinationView:nil completed:^(UIView *s, UIView* d) {
@@ -277,6 +309,28 @@
         cardBackSideView.detailsDescriptionLabel.text = nil;
         cardBackSideView.detailsTitleLabel.text = nil;
         [cardBackSideView removeFromSuperview];
+    }];
+}
+
+-(void) claimCard: (AldCardSideView *)sourceView
+{
+    __block UIView *view = sourceView;
+    __block CGRect  originalFrame = sourceView.frame;
+    
+    [UIView animateWithDuration:kAldCardRemovalEffectDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        // Slowly, let the card fade out
+        view.layer.opacity = 0;
+        
+        // Rotate the card in a flash 3D effect, while also scaling it down.
+        CATransform3D rotation3D = CATransform3DIdentity;
+        rotation3D.m34 = 1.0 / 500;
+        rotation3D = CATransform3DRotate(rotation3D, M_PI, 1.0f, 0.0f, 0.0f);
+        rotation3D = CATransform3DScale(rotation3D, 0.1, 0.1, 0.1);
+        view.layer.transform = rotation3D;
+        
+    } completion:^(BOOL finished) {
+        view.frame = originalFrame;
+        view.hidden = YES;
     }];
 }
 

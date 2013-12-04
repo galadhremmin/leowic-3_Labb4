@@ -18,7 +18,11 @@
 		D70738C418327552007FF061 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D70738C318327552007FF061 /* XCTest.framework */; };
 		D70738C518327552007FF061 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D70738A418327552007FF061 /* Foundation.framework */; };
 		D70738C618327552007FF061 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D70738A818327552007FF061 /* UIKit.framework */; };
-		D70738DC1832777A007FF061 /* AldViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70738DB1832777A007FF061 /* AldViewController.m */; };
+		D70738DC1832777A007FF061 /* AldGameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D70738DB1832777A007FF061 /* AldGameViewController.m */; };
+		D73C3706184E812400D5D051 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73C3705184E812400D5D051 /* CoreData.framework */; };
+		D73C3753184E834400D5D051 /* AldDataCore.m in Sources */ = {isa = PBXBuildFile; fileRef = D73C3752184E834400D5D051 /* AldDataCore.m */; };
+		D73C3755184E86C100D5D051 /* Managed objects in Resources */ = {isa = PBXBuildFile; fileRef = D73C3754184E86C100D5D051 /* Managed objects */; };
+		D73C3773184E9EC400D5D051 /* AldMainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */; };
 		D77D0DC8184A51BF0000A354 /* flare.png in Resources */ = {isa = PBXBuildFile; fileRef = D77D0DC7184A51BF0000A354 /* flare.png */; };
 		D77D0DCB184A5CAB0000A354 /* AldPortraitViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D77D0DCA184A5CAB0000A354 /* AldPortraitViewCell.m */; };
 		D77D0DCF184A5FD50000A354 /* UIView+Effects.m in Sources */ = {isa = PBXBuildFile; fileRef = D77D0DCE184A5FD50000A354 /* UIView+Effects.m */; };
@@ -36,7 +40,6 @@
 		D78E4CBB1844F7C4006FDC8B /* AldPlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CBA1844F7C4006FDC8B /* AldPlayerSelectionViewController.m */; };
 		D78E4CC218467805006FDC8B /* AldPlayerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CC118467805006FDC8B /* AldPlayerWrapper.m */; };
 		D78E4CC518468A8C006FDC8B /* AldPlayerData.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CC418468A8C006FDC8B /* AldPlayerData.m */; };
-		D78E4CCC18468F58006FDC8B /* AldJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CCB18468F58006FDC8B /* AldJSONData.m */; };
 		D7C3B24B1838F0380013DD81 /* AldGameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B24A1838F0380013DD81 /* AldGameModel.m */; };
 		D7C3B2521838FA710013DD81 /* AldCardFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B2511838FA710013DD81 /* AldCardFrontView.m */; };
 		D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B25418390D1E0013DD81 /* AldCardBackView.m */; };
@@ -46,6 +49,8 @@
 		D7C3B268183936CB0013DD81 /* back-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B266183936CB0013DD81 /* back-texture.jpg */; };
 		D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7C3B267183936CB0013DD81 /* front-texture.jpg */; };
 		D7CA1702183AE16600660A82 /* UIView+Glow.m in Sources */ = {isa = PBXBuildFile; fileRef = D7CA1701183AE16600660A82 /* UIView+Glow.m */; };
+		D7D53ED9184E73A200D8DCF1 /* picture-frame.png in Resources */ = {isa = PBXBuildFile; fileRef = D7D53ED8184E73A200D8DCF1 /* picture-frame.png */; };
+		D7D53EDD184E79C300D8DCF1 /* DataCore.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D7D53EDB184E79C300D8DCF1 /* DataCore.xcdatamodeld */; };
 		D7F3C9C718439FF8001A3152 /* parmaite.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D7F3C9C618439FF8001A3152 /* parmaite.ttf */; };
 		D7F3C9CA1843A52E001A3152 /* AldCardData.m in Sources */ = {isa = PBXBuildFile; fileRef = D7F3C9C91843A52E001A3152 /* AldCardData.m */; };
 /* End PBXBuildFile section */
@@ -75,8 +80,14 @@
 		D70738BC18327552007FF061 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D70738C218327552007FF061 /* leowic-3_Labb4Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "leowic-3_Labb4Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D70738C318327552007FF061 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D70738DA1832777A007FF061 /* AldViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldViewController.h; sourceTree = "<group>"; };
-		D70738DB1832777A007FF061 /* AldViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldViewController.m; sourceTree = "<group>"; };
+		D70738DA1832777A007FF061 /* AldGameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldGameViewController.h; sourceTree = "<group>"; };
+		D70738DB1832777A007FF061 /* AldGameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldGameViewController.m; sourceTree = "<group>"; };
+		D73C3705184E812400D5D051 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		D73C3751184E834400D5D051 /* AldDataCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldDataCore.h; sourceTree = "<group>"; };
+		D73C3752184E834400D5D051 /* AldDataCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldDataCore.m; sourceTree = "<group>"; };
+		D73C3754184E86C100D5D051 /* Managed objects */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Managed objects"; sourceTree = "<group>"; };
+		D73C3771184E9EC400D5D051 /* AldMainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldMainMenuViewController.h; sourceTree = "<group>"; };
+		D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldMainMenuViewController.m; sourceTree = "<group>"; };
 		D77D0DC7184A51BF0000A354 /* flare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flare.png; sourceTree = "<group>"; };
 		D77D0DC9184A5CAB0000A354 /* AldPortraitViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPortraitViewCell.h; sourceTree = "<group>"; };
 		D77D0DCA184A5CAB0000A354 /* AldPortraitViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPortraitViewCell.m; sourceTree = "<group>"; };
@@ -103,8 +114,6 @@
 		D78E4CC318468A8C006FDC8B /* AldPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPlayerData.h; sourceTree = "<group>"; };
 		D78E4CC418468A8C006FDC8B /* AldPlayerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPlayerData.m; sourceTree = "<group>"; };
 		D78E4CC918468EE1006FDC8B /* AldJSONSerializable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AldJSONSerializable.h; sourceTree = "<group>"; };
-		D78E4CCA18468F58006FDC8B /* AldJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldJSONData.h; sourceTree = "<group>"; };
-		D78E4CCB18468F58006FDC8B /* AldJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldJSONData.m; sourceTree = "<group>"; };
 		D7C3B2491838F0380013DD81 /* AldGameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldGameModel.h; sourceTree = "<group>"; };
 		D7C3B24A1838F0380013DD81 /* AldGameModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldGameModel.m; sourceTree = "<group>"; };
 		D7C3B2501838FA710013DD81 /* AldCardFrontView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardFrontView.h; sourceTree = "<group>"; };
@@ -121,6 +130,8 @@
 		D7C3B267183936CB0013DD81 /* front-texture.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "front-texture.jpg"; sourceTree = "<group>"; };
 		D7CA1700183AE16600660A82 /* UIView+Glow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Glow.h"; sourceTree = "<group>"; };
 		D7CA1701183AE16600660A82 /* UIView+Glow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Glow.m"; sourceTree = "<group>"; };
+		D7D53ED8184E73A200D8DCF1 /* picture-frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture-frame.png"; sourceTree = "<group>"; };
+		D7D53EDC184E79C300D8DCF1 /* DataCore.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataCore.xcdatamodel; sourceTree = "<group>"; };
 		D7F3C9C618439FF8001A3152 /* parmaite.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = parmaite.ttf; sourceTree = "<group>"; };
 		D7F3C9C81843A52E001A3152 /* AldCardData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardData.h; sourceTree = "<group>"; };
 		D7F3C9C91843A52E001A3152 /* AldCardData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldCardData.m; sourceTree = "<group>"; };
@@ -131,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D73C3706184E812400D5D051 /* CoreData.framework in Frameworks */,
 				D70738A718327552007FF061 /* CoreGraphics.framework in Frameworks */,
 				D70738A918327552007FF061 /* UIKit.framework in Frameworks */,
 				D70738A518327552007FF061 /* Foundation.framework in Frameworks */,
@@ -171,6 +183,7 @@
 		D70738A318327552007FF061 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D73C3705184E812400D5D051 /* CoreData.framework */,
 				D70738A418327552007FF061 /* Foundation.framework */,
 				D70738A618327552007FF061 /* CoreGraphics.framework */,
 				D70738A818327552007FF061 /* UIKit.framework */,
@@ -212,12 +225,14 @@
 			children = (
 				D78E4CBF184677E6006FDC8B /* Entities */,
 				D77D0DD6184A773E0000A354 /* AldTimingConstants.h */,
-				D70738DA1832777A007FF061 /* AldViewController.h */,
-				D70738DB1832777A007FF061 /* AldViewController.m */,
-				D78E4CB61844F52B006FDC8B /* AldPortraitSelectionViewController.h */,
-				D78E4CB71844F52B006FDC8B /* AldPortraitSelectionViewController.m */,
+				D73C3771184E9EC400D5D051 /* AldMainMenuViewController.h */,
+				D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */,
 				D78E4CB91844F7C4006FDC8B /* AldPlayerSelectionViewController.h */,
 				D78E4CBA1844F7C4006FDC8B /* AldPlayerSelectionViewController.m */,
+				D78E4CB61844F52B006FDC8B /* AldPortraitSelectionViewController.h */,
+				D78E4CB71844F52B006FDC8B /* AldPortraitSelectionViewController.m */,
+				D70738DA1832777A007FF061 /* AldGameViewController.h */,
+				D70738DB1832777A007FF061 /* AldGameViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -250,9 +265,8 @@
 		D7C3B2481838F0190013DD81 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				D7D53EDA184E78B400D8DCF1 /* Core */,
 				D78E4CC918468EE1006FDC8B /* AldJSONSerializable.h */,
-				D78E4CCA18468F58006FDC8B /* AldJSONData.h */,
-				D78E4CCB18468F58006FDC8B /* AldJSONData.m */,
 				D78E4CC318468A8C006FDC8B /* AldPlayerData.h */,
 				D78E4CC418468A8C006FDC8B /* AldPlayerData.m */,
 				D7F3C9C81843A52E001A3152 /* AldCardData.h */,
@@ -298,6 +312,7 @@
 		D7C3B265183936CB0013DD81 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				D7D53ED8184E73A200D8DCF1 /* picture-frame.png */,
 				D77D0DC7184A51BF0000A354 /* flare.png */,
 				D78E4CA31844F3E0006FDC8B /* Portraits */,
 				D7F3C9C618439FF8001A3152 /* parmaite.ttf */,
@@ -305,6 +320,17 @@
 				D7C3B267183936CB0013DD81 /* front-texture.jpg */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		D7D53EDA184E78B400D8DCF1 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				D73C3754184E86C100D5D051 /* Managed objects */,
+				D7D53EDB184E79C300D8DCF1 /* DataCore.xcdatamodeld */,
+				D73C3751184E834400D5D051 /* AldDataCore.h */,
+				D73C3752184E834400D5D051 /* AldDataCore.m */,
+			);
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -398,8 +424,10 @@
 				D7C3B269183936CB0013DD81 /* front-texture.jpg in Resources */,
 				D78E4CB41844F3E1006FDC8B /* elf8.png in Resources */,
 				D78E4CB31844F3E1006FDC8B /* elf7.png in Resources */,
+				D73C3755184E86C100D5D051 /* Managed objects in Resources */,
 				D70738B818327552007FF061 /* Main.storyboard in Resources */,
 				D7F3C9C718439FF8001A3152 /* parmaite.ttf in Resources */,
+				D7D53ED9184E73A200D8DCF1 /* picture-frame.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,14 +453,16 @@
 				D7C3B24B1838F0380013DD81 /* AldGameModel.m in Sources */,
 				D78E4CBB1844F7C4006FDC8B /* AldPlayerSelectionViewController.m in Sources */,
 				D77D0DCF184A5FD50000A354 /* UIView+Effects.m in Sources */,
+				D7D53EDD184E79C300D8DCF1 /* DataCore.xcdatamodeld in Sources */,
 				D7C3B261183913930013DD81 /* AldCardSidesViewContainer.m in Sources */,
+				D73C3773184E9EC400D5D051 /* AldMainMenuViewController.m in Sources */,
 				D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */,
 				D78E4CC218467805006FDC8B /* AldPlayerWrapper.m in Sources */,
-				D70738DC1832777A007FF061 /* AldViewController.m in Sources */,
+				D70738DC1832777A007FF061 /* AldGameViewController.m in Sources */,
 				D7CA1702183AE16600660A82 /* UIView+Glow.m in Sources */,
 				D7F3C9CA1843A52E001A3152 /* AldCardData.m in Sources */,
 				D77D0DD5184A734C0000A354 /* AldWillOWispView.m in Sources */,
-				D78E4CCC18468F58006FDC8B /* AldJSONData.m in Sources */,
+				D73C3753184E834400D5D051 /* AldDataCore.m in Sources */,
 				D7C3B26418391A380013DD81 /* AldCardSideView.m in Sources */,
 				D77D0DCB184A5CAB0000A354 /* AldPortraitViewCell.m in Sources */,
 				D70738B118327552007FF061 /* main.m in Sources */,
@@ -647,6 +677,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		D7D53EDB184E79C300D8DCF1 /* DataCore.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				D7D53EDC184E79C300D8DCF1 /* DataCore.xcdatamodel */,
+			);
+			currentVersion = D7D53EDC184E79C300D8DCF1 /* DataCore.xcdatamodel */;
+			path = DataCore.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = D707389918327552007FF061 /* Project object */;
 }

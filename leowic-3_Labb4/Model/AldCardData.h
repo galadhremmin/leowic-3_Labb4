@@ -7,9 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "AldJSONData.h"
 
-@interface AldCardData : AldJSONData
+@interface AldCardData : NSObject
 
 @property(readonly, copy, nonatomic) NSString *title;
 @property(readonly, copy, nonatomic) NSString *description;
