@@ -13,7 +13,6 @@
 @interface AldHighscoreEntity : NSManagedObject
 
 @property (nonatomic, retain) NSDate * date;
-@property (nonatomic, retain) NSNumber * highscoreID;
 @property (nonatomic, retain) NSString * playerName;
 @property (nonatomic, retain) NSNumber * score;
 

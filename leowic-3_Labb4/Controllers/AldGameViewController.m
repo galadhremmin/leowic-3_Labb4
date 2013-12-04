@@ -8,7 +8,7 @@
 
 #import <QuartzCore/QuartzCore.h>
 #import <CoreGraphics/CoreGraphics.h>
-#import "AldTimingConstants.h"
+#import "AldConstants.h"
 #import "UIView+Effects.h"
 #import "UIImage+BundleExtensions.h"
 #import "AldGameViewController.h"
@@ -84,7 +84,7 @@
             [NSException raise:@"Invalid number of portraits." format:@"%d is not a valid number of portraits (i.e. players)", _players.count];
         }
         
-        _model = [[AldGameModel alloc] initWithNumberOfCards:16 playersWithPortraits:_playerPortraitPaths];
+        _model = [[AldGameModel alloc] initWithNumberOfCards:kAldDefaultNumberOfCards playersWithPortraits:_playerPortraitPaths];
         
         // deallocate the portrait paths, as they are no longer required.
         _playerPortraitPaths = nil;
@@ -334,15 +334,71 @@
     }];
 }
 
--(void) playerMoveFeedback: (NSNumber *)matches
+-(void) playerMoveFeedback: (NSNumber *)isMatch
 {
     AldPlayerData *currentPlayer = [_model currentPlayer];
     AldPlayerWrapper *portrait = [_players objectAtIndex:currentPlayer.ID - 1];
     
-    [_willOWisp moveToView:portrait.portraitView];
+    if (_model.cardsLeftToFlip > 0) {
+        [_willOWisp moveToView:portrait.portraitView];
+    } else {
+        [self gameOver];
+    }
     
     @synchronized(_selectedCards) {
         [_selectedCards removeAllObjects];
+    }
+}
+
+-(void) gameOver
+{
+    NSString *title, *description;
+    AldPlayerData *winningPlayer = [_model playerInTheLead];
+    UIAlertView *dialogue;
+    
+    if (winningPlayer == nil) {
+        title = [NSString stringWithFormat:@"It's a draw!"];
+        description = [NSString stringWithFormat:@"You both accrued %d points. Good job! Would you like to try again?", [_model currentPlayer].score];
+        
+        dialogue = [[UIAlertView alloc] initWithTitle:title message:description delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+    } else {
+        title = [NSString stringWithFormat:@"Player %d won!", winningPlayer.ID];
+        description = [NSString stringWithFormat:@"You accrued an impressive %d points! Enter your name beneath.", winningPlayer.score];
+        
+        dialogue = [[UIAlertView alloc] initWithTitle:title message:description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        
+        UITextField *nameField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 45.0, 245.0, 25.0)];
+        nameField.backgroundColor = [UIColor whiteColor];
+        [dialogue addSubview:nameField];
+    }
+    
+    [dialogue show];
+}
+
+#pragma mark - Alert view delegation
+
+-(BOOL) alertViewShouldEnableFirstOtherButton: (UIAlertView *)alertView
+{
+    UITextField *nameField = (UITextField *) [alertView.subviews objectAtIndex:alertView.subviews.count - 1];
+    if (nameField == nil) {
+        return YES;
+    }
+    
+    return [nameField.text length] > 0;
+}
+
+-(void) alertView: (UIAlertView *)alertView clickedButtonAtIndex: (NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        // Start over
+    }
+    
+    AldPlayerData *winningPlayer = [_model playerInTheLead];
+    if (buttonIndex == 0 && winningPlayer != nil) {
+        // Not a draw, name entered
+        UITextField *nameField = (UITextField *) [alertView.subviews objectAtIndex:alertView.subviews.count - 1];
+        
+        [_model persistHighscore:winningPlayer.score forPlayerName:nameField.text];
     }
 }
 

@@ -118,7 +118,7 @@
     
     // From the application's configuration settings, acquire enough card variants to
     // populate the full map. This is (of course) the number of cards per row times two.
-    NSArray *tengwarSymbols = [self collectVariants:_cardsPerRow * 2];
+    NSArray *tengwarSymbols = [self collectVariants:_cardsLeftToFlip * 0.5];
     
     // Adds the cards to the map sequentially, in the given order.
     for (i = 0, n = 1; i < _cardsLeftToFlip; i += 1) {
@@ -301,9 +301,25 @@
     return [_players objectAtIndex:_currentPlayerIndex];
 }
 
--(AldPlayerData *)currentPlayer
+-(AldPlayerData *) currentPlayer
 {
     return [_players objectAtIndex:_currentPlayerIndex];
+}
+
+-(AldPlayerData *) playerInTheLead
+{
+    AldPlayerData *leadingPlayer = nil;
+    for (AldPlayerData *player in _players) {
+        if (leadingPlayer == nil) {
+            leadingPlayer = player;
+        } else if (player.score == leadingPlayer.score) {
+            return nil; // draw!
+        } else if (player.score > leadingPlayer.score) {
+            leadingPlayer = player;
+        }
+    }
+    
+    return leadingPlayer;
 }
 
 -(void) switchPlayers
@@ -311,15 +327,46 @@
     NSUInteger currentPlayer = _currentPlayerIndex + 1;
     if (currentPlayer >= _players.count) {
         currentPlayer = 0;
+        _rounds += 1;
     }
     
     [self setCurrentPlayerIndex:currentPlayer];
+}
+
+-(BOOL) finishWithWinningPlayerName: (NSString *)playerName
+{
+    if (_cardsLeftToFlip > 0) {
+        [NSException raise:@"Can't finish the current game!" format:@"There are cards left to flip."];
+    }
+    
+    AldPlayerData *winningPlayer = [self playerInTheLead];
+    
+    if (winningPlayer == nil) {
+        return NO; // don't save draws!
+    }
+    
+    BOOL isHighscore = [self isHighscore:winningPlayer.score];
+    if (isHighscore) {
+        // Create a highscore element
+        [self persistHighscore:winningPlayer.score forPlayerName:playerName];
+    }
+    
+    // Clean up the database - this information is no longer required
+    [self deletePersistence];
+    
+    return isHighscore;
 }
 
 #pragma mark - Persistence
 
 -(void) persist
 {
+    // Do not persist the game model if there are no cards left to flip, as the game is
+    // finished.
+    if (_cardsLeftToFlip < 1) {
+        return;
+    }
+    
     NSUInteger i;
     
     AldDataCore *core = [AldDataCore defaultCore];
@@ -396,6 +443,38 @@
     _modelEntity = gameEntity;
 }
 
+-(void) deletePersistence
+{
+    AldDataCore *core = [AldDataCore defaultCore];
+    [_modelEntity removeCards:_modelEntity.cards];
+    [_modelEntity removePlayers:_modelEntity.players];
+    [core.managedObjectContext deleteObject:_modelEntity];
+    
+    [core saveChanges];
+    
+    _modelEntity = nil;
+}
+
+-(BOOL) isHighscore: (NSUInteger)score
+{
+    AldDataCore *core = [AldDataCore defaultCore];
+    
+    
+    return YES;
+}
+
+-(void) persistHighscore: (NSUInteger)score forPlayerName: (NSString *)playerName
+{
+    AldDataCore *core = [AldDataCore defaultCore];
+    AldHighscoreEntity *highscoreEntity = [NSEntityDescription insertNewObjectForEntityForName:kAldDataCoreHighscoreEntityName inManagedObjectContext:core.managedObjectContext];
+    
+    highscoreEntity.score = [NSNumber numberWithUnsignedInteger:score];
+    highscoreEntity.playerName = playerName;
+    highscoreEntity.date = [NSDate date];
+    
+    [core saveChanges];
+}
+
 -(void) loadFromEntity
 {
     if (_modelEntity == nil) {
@@ -406,9 +485,11 @@
     
     // Restore basic game logic
     _currentPlayerIndex = [data.currentPlayerID unsignedIntegerValue];
+    _rounds = [data.rounds unsignedIntegerValue];
     
     // Restore the cards (the "map")
     _cardsPerRow = [data.cardsPerRow unsignedIntegerValue];
+    _cardsLeftToFlip = 0;
     _map = [[NSMutableArray alloc] initWithCapacity:_cardsPerRow * _cardsPerRow];
 
     // Fill the array with null, to be sure that the space is allocated
@@ -420,6 +501,10 @@
     for (AldGameCardEntity *cardEntity in data.cards) {
         AldCardData *cardData = [[AldCardData alloc] initWithTitle:cardEntity.cardTitle description:cardEntity.cardDescription];
         cardData.collected = [cardEntity.collected boolValue];
+        
+        if (!cardData.collected) {
+            _cardsLeftToFlip += 1;
+        }
         
         [_map replaceObjectAtIndex:[cardEntity.index unsignedIntegerValue] withObject:cardData];
     }

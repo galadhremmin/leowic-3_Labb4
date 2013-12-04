@@ -11,7 +11,7 @@
 #import "AldCardSideView.h"
 #import "AldWillOWispView.h"
 
-@interface AldGameViewController : UIViewController<UIScrollViewDelegate>
+@interface AldGameViewController : UIViewController<UIScrollViewDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic)   IBOutlet UIScrollView     *scrollView;
 @property (weak, nonatomic)   IBOutlet UIImageView      *player1View;

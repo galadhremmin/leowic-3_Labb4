@@ -7,7 +7,7 @@
 //
 
 #import "AldWillOWispView.h"
-#import "AldTimingConstants.h"
+#import "AldConstants.h"
 
 @implementation AldWillOWispView
 

@@ -15,6 +15,7 @@
 
 @property (nonatomic, retain) NSNumber * cardsPerRow;
 @property (nonatomic, retain) NSNumber * currentPlayerID;
+@property (nonatomic, retain) NSNumber * rounds;
 @property (nonatomic, retain) NSDate * dateBegun;
 @property (nonatomic, retain) NSSet *cards;
 @property (nonatomic, retain) NSSet *players;

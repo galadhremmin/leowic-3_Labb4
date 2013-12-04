@@ -11,12 +11,12 @@
         <attribute name="cardsPerRow" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="currentPlayerID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="dateBegun" attributeType="Date" syncable="YES"/>
+        <attribute name="rounds" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <relationship name="cards" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AldGameCardEntity" inverseName="game" inverseEntity="AldGameCardEntity" syncable="YES"/>
         <relationship name="players" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AldPlayerEntity" inverseName="game" inverseEntity="AldPlayerEntity" syncable="YES"/>
     </entity>
     <entity name="AldHighscoreEntity" representedClassName="AldHighscoreEntity" syncable="YES">
         <attribute name="date" attributeType="Date" syncable="YES"/>
-        <attribute name="highscoreID" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="playerName" attributeType="String" syncable="YES"/>
         <attribute name="score" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
     </entity>
@@ -27,9 +27,9 @@
         <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AldGameEntity" inverseName="players" inverseEntity="AldGameEntity" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AldGameEntity" positionX="-90" positionY="126" width="128" height="103"/>
-        <element name="AldGameCardEntity" positionX="153" positionY="-9" width="128" height="120"/>
-        <element name="AldHighscoreEntity" positionX="322" positionY="30" width="128" height="103"/>
-        <element name="AldPlayerEntity" positionX="396" positionY="207" width="128" height="105"/>
+        <element name="AldGameCardEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="AldGameEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="AldHighscoreEntity" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="AldPlayerEntity" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

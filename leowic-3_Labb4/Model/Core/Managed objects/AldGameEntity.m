@@ -14,6 +14,8 @@
 @implementation AldGameEntity
 
 @dynamic cardsPerRow;
+@dynamic currentPlayerID;
+@dynamic rounds;
 @dynamic dateBegun;
 @dynamic cards;
 @dynamic players;

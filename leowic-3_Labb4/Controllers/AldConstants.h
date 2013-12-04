@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 LTU. All rights reserved.
 //
 
+#define kAldDefaultNumberOfCards             (16) // 4^2
+
 #define kAldTimingCardBeforeFlippingDuration (2.0f)
 #define kAldTimingCardFlippingDuration       (2.0f)
 #define kAldTimingCardViewingDuration        (1.5f)

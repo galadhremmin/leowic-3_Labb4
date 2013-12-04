@@ -12,7 +12,6 @@
 @implementation AldHighscoreEntity
 
 @dynamic date;
-@dynamic highscoreID;
 @dynamic playerName;
 @dynamic score;
 

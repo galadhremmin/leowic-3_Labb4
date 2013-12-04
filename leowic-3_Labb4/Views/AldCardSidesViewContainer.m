@@ -9,7 +9,7 @@
 #import "AldCardSidesViewContainer.h"
 #import "AldCardFrontView.h"
 #import "AldCardBackView.h"
-#import "AldTimingConstants.h"
+#import "AldConstants.h"
 
 @interface AldCardSidesViewContainer()
 

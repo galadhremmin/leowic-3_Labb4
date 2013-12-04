@@ -95,7 +95,7 @@
 		D77D0DCE184A5FD50000A354 /* UIView+Effects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Effects.m"; sourceTree = "<group>"; };
 		D77D0DD3184A734C0000A354 /* AldWillOWispView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldWillOWispView.h; sourceTree = "<group>"; };
 		D77D0DD4184A734C0000A354 /* AldWillOWispView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldWillOWispView.m; sourceTree = "<group>"; };
-		D77D0DD6184A773E0000A354 /* AldTimingConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AldTimingConstants.h; sourceTree = "<group>"; };
+		D77D0DD6184A773E0000A354 /* AldConstants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AldConstants.h; sourceTree = "<group>"; };
 		D78E4CA41844F3E0006FDC8B /* elf1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = elf1.png; sourceTree = "<group>"; };
 		D78E4CA51844F3E0006FDC8B /* elf2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = elf2.png; sourceTree = "<group>"; };
 		D78E4CA61844F3E0006FDC8B /* elf3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = elf3.png; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				D78E4CBF184677E6006FDC8B /* Entities */,
-				D77D0DD6184A773E0000A354 /* AldTimingConstants.h */,
+				D77D0DD6184A773E0000A354 /* AldConstants.h */,
 				D73C3771184E9EC400D5D051 /* AldMainMenuViewController.h */,
 				D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */,
 				D78E4CB91844F7C4006FDC8B /* AldPlayerSelectionViewController.h */,

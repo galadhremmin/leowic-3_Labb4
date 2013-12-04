@@ -19,6 +19,7 @@
 
 @property(nonatomic)                   NSUInteger  cardsPerRow;
 @property(nonatomic, readonly)         NSUInteger  cardsLeftToFlip;
+@property(nonatomic, readonly)         NSUInteger  rounds;
 @property(nonatomic, strong, readonly) NSArray    *players;
 
 #pragma mark - Initialization
@@ -36,11 +37,15 @@
 -(BOOL)            flipCards: (NSUInteger *)indexes;
 -(AldPlayerData *) previousPlayer;
 -(AldPlayerData *) currentPlayer;
+-(AldPlayerData *) playerInTheLead;
 -(void)            switchPlayers;
+-(BOOL)            finishWithWinningPlayerName: (NSString *)playerName;
 
 #pragma mark - Persistence
 
 -(void)            persist;
+-(void)            deletePersistence;
+-(void)            persistHighscore: (NSUInteger)score forPlayerName: (NSString *)playerName;
 -(void)            loadFromEntity;
 
 @end

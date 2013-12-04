@@ -70,6 +70,30 @@
 		<string>parma</string>
 		<key>1</key>
 		<string>tinco</string>
+		<key>ñÉ</key>
+		<string>mine (1)</string>
+		<key>òÉ</key>
+		<string>atta (2)</string>
+		<key>óÈ</key>
+		<string>nelde (3)</string>
+		<key>ôÉ</key>
+		<string>canta (4)</string>
+		<key>õÈ</key>
+		<string>lempe (5)</string>
+		<key>öÈ</key>
+		<string>enque (6)</string>
+		<key>÷É</key>
+		<string>otso (7)</string>
+		<key>øÉ</key>
+		<string>tolto (8)</string>
+		<key>ùÈ</key>
+		<string>nerte (9)</string>
+		<key>úÉ</key>
+		<string>quea (10)</string>
+		<key>ûÉ</key>
+		<string>minque (11)</string>
+		<key>ñÉðÉ</key>
+		<string>yunque (12)</string>
 	</dict>
 	<key>UIAppFonts</key>
 	<array>
