@@ -18,6 +18,7 @@
 #pragma mark - Properties
 
 @property(nonatomic)                   NSUInteger  cardsPerRow;
+@property(nonatomic, readonly)         NSUInteger  pointMagnitude;
 @property(nonatomic, readonly)         NSUInteger  cardsLeftToFlip;
 @property(nonatomic, readonly)         NSUInteger  rounds;
 @property(nonatomic, strong, readonly) NSArray    *players;
@@ -44,7 +45,6 @@
 #pragma mark - Persistence
 
 -(void)            persist;
--(void)            deletePersistence;
 -(void)            persistHighscore: (NSUInteger)score forPlayerName: (NSString *)playerName;
 -(void)            loadFromEntity;
 

@@ -14,6 +14,7 @@
 @interface AldGameEntity : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * cardsPerRow;
+@property (nonatomic, retain) NSNumber * cardsLeftToFlip;
 @property (nonatomic, retain) NSNumber * currentPlayerID;
 @property (nonatomic, retain) NSNumber * rounds;
 @property (nonatomic, retain) NSDate * dateBegun;

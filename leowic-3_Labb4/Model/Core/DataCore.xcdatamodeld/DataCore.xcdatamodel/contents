@@ -8,6 +8,7 @@
         <relationship name="game" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="AldGameEntity" inverseName="cards" inverseEntity="AldGameEntity" syncable="YES"/>
     </entity>
     <entity name="AldGameEntity" representedClassName="AldGameEntity" syncable="YES">
+        <attribute name="cardsLeftToFlip" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="cardsPerRow" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="currentPlayerID" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="dateBegun" attributeType="Date" syncable="YES"/>

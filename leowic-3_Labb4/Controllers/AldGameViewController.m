@@ -107,9 +107,6 @@
         }
         
         _model = [[AldGameModel alloc] initWithNumberOfCards:kAldDefaultNumberOfCards playersWithPortraits:_playerPortraitPaths];
-        
-        // deallocate the portrait paths, as they are no longer required.
-        _playerPortraitPaths = nil;
     }
     
     // The AldPlayerWrapper class for AldPlayerData adds informatin the views needs to visualize
@@ -218,6 +215,7 @@
     _scrollView.delegate            = self;
     
     // Remove all other subviews and add the map view to the scroll view.
+    [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     [_scrollView addSubview:mapView];
 }
 
@@ -229,8 +227,6 @@
     
     [_model persist];
     _model = nil;
-    
-    [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 -(void) calculateScale: (BOOL)animated
@@ -387,11 +383,8 @@
         title = [NSString stringWithFormat:@"Player %d won!", winningPlayer.ID];
         description = [NSString stringWithFormat:@"You accrued an impressive %d points! Enter your name beneath.", winningPlayer.score];
         
-        dialogue = [[UIAlertView alloc] initWithTitle:title message:description delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        
-        UITextField *nameField = [[UITextField alloc] initWithFrame:CGRectMake(20.0, 45.0, 245.0, 25.0)];
-        nameField.backgroundColor = [UIColor whiteColor];
-        [dialogue addSubview:nameField];
+        dialogue = [[UIAlertView alloc] initWithTitle:title message:description delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Highscore?", nil];
+        dialogue.alertViewStyle = UIAlertViewStylePlainTextInput;
     }
     
     [dialogue show];
@@ -401,7 +394,11 @@
 
 -(BOOL) alertViewShouldEnableFirstOtherButton: (UIAlertView *)alertView
 {
-    UITextField *nameField = (UITextField *) [alertView.subviews objectAtIndex:alertView.subviews.count - 1];
+    if (alertView.alertViewStyle != UIAlertViewStylePlainTextInput) {
+        return YES;
+    }
+    
+    UITextField *nameField = [alertView textFieldAtIndex:0];
     if (nameField == nil) {
         return YES;
     }
@@ -411,16 +408,28 @@
 
 -(void) alertView: (UIAlertView *)alertView clickedButtonAtIndex: (NSInteger)buttonIndex
 {
-    if (buttonIndex == 1) {
+    BOOL returnToCharacterSelection = YES;
+    
+    if (alertView.alertViewStyle == UIAlertViewStylePlainTextInput) {
+        
+        if (buttonIndex == 1) { // Highscore?
+            UITextField *nameField = [alertView textFieldAtIndex:0];
+            if ([_model finishWithWinningPlayerName:nameField.text]) {
+
+            }
+        }
+        
+    } else if (buttonIndex == 1) {
         // Start over
+        _model = nil;
+        [self configure];
+        [self calculateScale:YES];
+        
+        returnToCharacterSelection = NO;
     }
     
-    AldPlayerData *winningPlayer = [_model playerInTheLead];
-    if (buttonIndex == 0 && winningPlayer != nil) {
-        // Not a draw, name entered
-        UITextField *nameField = (UITextField *) [alertView.subviews objectAtIndex:alertView.subviews.count - 1];
-        
-        [_model persistHighscore:winningPlayer.score forPlayerName:nameField.text];
+    if (returnToCharacterSelection) {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

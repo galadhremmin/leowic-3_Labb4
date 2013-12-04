@@ -29,7 +29,13 @@
     
     NSEntityDescription *gameEntity = [NSEntityDescription entityForName:kAldDataCoreGameEntityName inManagedObjectContext:core.managedObjectContext];
     
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"dateBegun" ascending:NO];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"cardsLeftToFlip > 0"];
+    
     fetchRequest.entity = gameEntity;
+    fetchRequest.predicate = predicate;
+    fetchRequest.sortDescriptors = @[sortDescriptor];
     fetchRequest.fetchLimit = 1;
     
     NSError *error = nil;
@@ -105,6 +111,7 @@
     // Calculate number of cards which will be in play. This is the square of the number of
     // cards per row.
     _cardsLeftToFlip = _cardsPerRow * _cardsPerRow;
+    _pointMagnitude = _cardsLeftToFlip;
     
     // Declare a few utility variables.
     NSUInteger i, n, iterations, i0, i1;
@@ -258,7 +265,7 @@
     AldPlayerData *player = [self currentPlayer];
     
     if (matches) {
-        [player scorePoints:_map.count];
+        [player scorePoints:_pointMagnitude];
         _cardsLeftToFlip -= kAldNumberOfSimultaneousCardSelections;
         
         // Assign the collected state to the cards associated with this instruction
@@ -270,7 +277,7 @@
     } else {
         
         NSUInteger newScore = player.score;
-        NSUInteger penalty = _map.count / 4; // Penalize 1/4 of the number of items
+        NSUInteger penalty = _pointMagnitude * 0.25; // Penalize 1/4 of the number of items
         
         // The score variables are unsigned, which is why this check is necessary to
         // avoid integer overflow.
@@ -328,6 +335,7 @@
     if (currentPlayer >= _players.count) {
         currentPlayer = 0;
         _rounds += 1;
+        _pointMagnitude -= 1;
     }
     
     [self setCurrentPlayerIndex:currentPlayer];
@@ -341,18 +349,17 @@
     
     AldPlayerData *winningPlayer = [self playerInTheLead];
     
-    if (winningPlayer == nil) {
-        return NO; // don't save draws!
-    }
-    
-    BOOL isHighscore = [self isHighscore:winningPlayer.score];
-    if (isHighscore) {
-        // Create a highscore element
-        [self persistHighscore:winningPlayer.score forPlayerName:playerName];
+    BOOL isHighscore = NO;
+    if (winningPlayer != nil) {
+        isHighscore = [self isHighscore:winningPlayer.score];
+        if (isHighscore) {
+            // Create a highscore element
+            [self persistHighscore:winningPlayer.score forPlayerName:playerName];
+        }
     }
     
     // Clean up the database - this information is no longer required
-    [self deletePersistence];
+    [self persist];
     
     return isHighscore;
 }
@@ -383,6 +390,7 @@
     
     // Always update the current player, as it changes with every round.
     gameEntity.currentPlayerID = [NSNumber numberWithUnsignedInteger:_currentPlayerIndex];
+    gameEntity.cardsLeftToFlip = [NSNumber numberWithUnsignedInteger:_cardsLeftToFlip];
     
     NSArray *entities = [gameEntity.cards allObjects];
     BOOL newEntity = NO;
@@ -443,24 +451,42 @@
     _modelEntity = gameEntity;
 }
 
--(void) deletePersistence
-{
-    AldDataCore *core = [AldDataCore defaultCore];
-    [_modelEntity removeCards:_modelEntity.cards];
-    [_modelEntity removePlayers:_modelEntity.players];
-    [core.managedObjectContext deleteObject:_modelEntity];
-    
-    [core saveChanges];
-    
-    _modelEntity = nil;
-}
-
 -(BOOL) isHighscore: (NSUInteger)score
 {
     AldDataCore *core = [AldDataCore defaultCore];
     
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:kAldDataCoreHighscoreEntityName    inManagedObjectContext:core.managedObjectContext];
+    [request setEntity:entity];
     
-    return YES;
+    // Specify that the request should return dictionaries.
+    [request setResultType:NSDictionaryResultType];
+    
+    // Create an expression for the key path.
+    NSExpression *keyPathExpression = [NSExpression expressionForKeyPath:@"score"];
+    
+    // Create an expression to represent the minimum value at the key path 'creationDate'
+    NSExpression *maxExpression = [NSExpression expressionForFunction:@"max:" arguments:[NSArray arrayWithObject:keyPathExpression]];
+    
+    // Create an expression description using the minExpression and returning a date.
+    NSExpressionDescription *expressionDescription = [[NSExpressionDescription alloc] init];
+    
+    // The name is the key that will be used in the dictionary for the return value.
+    [expressionDescription setName:@"maxScore"];
+    [expressionDescription setExpression:maxExpression];
+    [expressionDescription setExpressionResultType:NSDateAttributeType];
+    
+    // Set the request's properties to fetch just the property represented by the expressions.
+    [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
+    
+    NSError *error = nil;
+    NSArray *objects = [core.managedObjectContext executeFetchRequest:request error:&error];
+    
+    if (objects == nil || objects.count < 1) {
+        return YES;
+    }
+    
+    return [[[objects firstObject] valueForKey:@"maxScore"] unsignedIntegerValue] < score;
 }
 
 -(void) persistHighscore: (NSUInteger)score forPlayerName: (NSString *)playerName
@@ -489,7 +515,8 @@
     
     // Restore the cards (the "map")
     _cardsPerRow = [data.cardsPerRow unsignedIntegerValue];
-    _cardsLeftToFlip = 0;
+    _cardsLeftToFlip = [data.cardsLeftToFlip unsignedIntegerValue];
+    _pointMagnitude = _cardsLeftToFlip - _rounds;
     _map = [[NSMutableArray alloc] initWithCapacity:_cardsPerRow * _cardsPerRow];
 
     // Fill the array with null, to be sure that the space is allocated
@@ -501,10 +528,6 @@
     for (AldGameCardEntity *cardEntity in data.cards) {
         AldCardData *cardData = [[AldCardData alloc] initWithTitle:cardEntity.cardTitle description:cardEntity.cardDescription];
         cardData.collected = [cardEntity.collected boolValue];
-        
-        if (!cardData.collected) {
-            _cardsLeftToFlip += 1;
-        }
         
         [_map replaceObjectAtIndex:[cardEntity.index unsignedIntegerValue] withObject:cardData];
     }
