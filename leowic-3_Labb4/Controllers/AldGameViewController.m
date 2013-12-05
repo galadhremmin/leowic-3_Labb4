@@ -413,10 +413,22 @@
     if (alertView.alertViewStyle == UIAlertViewStylePlainTextInput) {
         
         if (buttonIndex == 1) { // Highscore?
+            NSString *title, *description;
+            AldPlayerData *playerWhoWon = [_model playerInTheLead];
             UITextField *nameField = [alertView textFieldAtIndex:0];
             if ([_model finishWithWinningPlayerName:nameField.text]) {
-
+                
+                title = @"Highscore!";
+                description = [NSString stringWithFormat:@"%d is a new highscore and has earned its place in the hall of fame! Would you like to play again?", playerWhoWon.score];
+            } else {
+                title = @"Sorry, not quite there yet!";
+                description = [NSString stringWithFormat:@"%d isn't quite enough. Try again?", playerWhoWon.score];
             }
+            
+            UIAlertView *view = [[UIAlertView alloc] initWithTitle:title message:description delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [view show];
+            
+            returnToCharacterSelection = NO;
         }
         
     } else if (buttonIndex == 1) {

@@ -23,8 +23,6 @@
 		D73C3753184E834400D5D051 /* AldDataCore.m in Sources */ = {isa = PBXBuildFile; fileRef = D73C3752184E834400D5D051 /* AldDataCore.m */; };
 		D73C3755184E86C100D5D051 /* Managed objects in Resources */ = {isa = PBXBuildFile; fileRef = D73C3754184E86C100D5D051 /* Managed objects */; };
 		D73C3773184E9EC400D5D051 /* AldMainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */; };
-		D75D4A5E184FD76300E9FDD9 /* AldHighscoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D75D4A5D184FD76300E9FDD9 /* AldHighscoreViewController.m */; };
-		D75D4A61184FD98800E9FDD9 /* AldHighscoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D75D4A60184FD98800E9FDD9 /* AldHighscoreCell.m */; };
 		D75D4A64184FE64E00E9FDD9 /* Lost Frontier.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D75D4A63184FE64E00E9FDD9 /* Lost Frontier.mp3 */; };
 		D75D4A66184FE67800E9FDD9 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75D4A65184FE67800E9FDD9 /* AudioToolbox.framework */; };
 		D77D0DC8184A51BF0000A354 /* flare.png in Resources */ = {isa = PBXBuildFile; fileRef = D77D0DC7184A51BF0000A354 /* flare.png */; };
@@ -44,6 +42,8 @@
 		D78E4CBB1844F7C4006FDC8B /* AldPlayerSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CBA1844F7C4006FDC8B /* AldPlayerSelectionViewController.m */; };
 		D78E4CC218467805006FDC8B /* AldPlayerWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CC118467805006FDC8B /* AldPlayerWrapper.m */; };
 		D78E4CC518468A8C006FDC8B /* AldPlayerData.m in Sources */ = {isa = PBXBuildFile; fileRef = D78E4CC418468A8C006FDC8B /* AldPlayerData.m */; };
+		D7B6FC8518502928006E29DC /* AldHighscoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B6FC8418502928006E29DC /* AldHighscoreCell.m */; };
+		D7B6FC8818502BCD006E29DC /* AldHighscoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7B6FC8718502BCD006E29DC /* AldHighscoreViewController.m */; };
 		D7C3B24B1838F0380013DD81 /* AldGameModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B24A1838F0380013DD81 /* AldGameModel.m */; };
 		D7C3B2521838FA710013DD81 /* AldCardFrontView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B2511838FA710013DD81 /* AldCardFrontView.m */; };
 		D7C3B25518390D1E0013DD81 /* AldCardBackView.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C3B25418390D1E0013DD81 /* AldCardBackView.m */; };
@@ -92,10 +92,6 @@
 		D73C3754184E86C100D5D051 /* Managed objects */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "Managed objects"; sourceTree = "<group>"; };
 		D73C3771184E9EC400D5D051 /* AldMainMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldMainMenuViewController.h; sourceTree = "<group>"; };
 		D73C3772184E9EC400D5D051 /* AldMainMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldMainMenuViewController.m; sourceTree = "<group>"; };
-		D75D4A5C184FD76300E9FDD9 /* AldHighscoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreViewController.h; sourceTree = "<group>"; };
-		D75D4A5D184FD76300E9FDD9 /* AldHighscoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreViewController.m; sourceTree = "<group>"; };
-		D75D4A5F184FD98800E9FDD9 /* AldHighscoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreCell.h; sourceTree = "<group>"; };
-		D75D4A60184FD98800E9FDD9 /* AldHighscoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreCell.m; sourceTree = "<group>"; };
 		D75D4A63184FE64E00E9FDD9 /* Lost Frontier.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Lost Frontier.mp3"; sourceTree = "<group>"; };
 		D75D4A65184FE67800E9FDD9 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		D77D0DC7184A51BF0000A354 /* flare.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flare.png; sourceTree = "<group>"; };
@@ -124,6 +120,10 @@
 		D78E4CC318468A8C006FDC8B /* AldPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPlayerData.h; sourceTree = "<group>"; };
 		D78E4CC418468A8C006FDC8B /* AldPlayerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPlayerData.m; sourceTree = "<group>"; };
 		D78E4CC918468EE1006FDC8B /* AldJSONSerializable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AldJSONSerializable.h; sourceTree = "<group>"; };
+		D7B6FC8318502928006E29DC /* AldHighscoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreCell.h; sourceTree = "<group>"; };
+		D7B6FC8418502928006E29DC /* AldHighscoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreCell.m; sourceTree = "<group>"; };
+		D7B6FC8618502BCD006E29DC /* AldHighscoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreViewController.h; sourceTree = "<group>"; };
+		D7B6FC8718502BCD006E29DC /* AldHighscoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreViewController.m; sourceTree = "<group>"; };
 		D7C3B2491838F0380013DD81 /* AldGameModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldGameModel.h; sourceTree = "<group>"; };
 		D7C3B24A1838F0380013DD81 /* AldGameModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldGameModel.m; sourceTree = "<group>"; };
 		D7C3B2501838FA710013DD81 /* AldCardFrontView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldCardFrontView.h; sourceTree = "<group>"; };
@@ -245,6 +245,8 @@
 				D78E4CB71844F52B006FDC8B /* AldPortraitSelectionViewController.m */,
 				D70738DA1832777A007FF061 /* AldGameViewController.h */,
 				D70738DB1832777A007FF061 /* AldGameViewController.m */,
+				D7B6FC8618502BCD006E29DC /* AldHighscoreViewController.h */,
+				D7B6FC8718502BCD006E29DC /* AldHighscoreViewController.m */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -308,10 +310,12 @@
 				D7C3B26318391A380013DD81 /* AldCardSideView.m */,
 				D7C3B25F183913930013DD81 /* AldCardSidesViewContainer.h */,
 				D7C3B260183913930013DD81 /* AldCardSidesViewContainer.m */,
-				D77D0DC9184A5CAB0000A354 /* AldPortraitViewCell.h */,
-				D77D0DCA184A5CAB0000A354 /* AldPortraitViewCell.m */,
 				D77D0DD3184A734C0000A354 /* AldWillOWispView.h */,
 				D77D0DD4184A734C0000A354 /* AldWillOWispView.m */,
+				D77D0DC9184A5CAB0000A354 /* AldPortraitViewCell.h */,
+				D77D0DCA184A5CAB0000A354 /* AldPortraitViewCell.m */,
+				D7B6FC8318502928006E29DC /* AldHighscoreCell.h */,
+				D7B6FC8418502928006E29DC /* AldHighscoreCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -483,7 +487,9 @@
 				D70738DC1832777A007FF061 /* AldGameViewController.m in Sources */,
 				D7CA1702183AE16600660A82 /* UIView+Glow.m in Sources */,
 				D7F3C9CA1843A52E001A3152 /* AldCardData.m in Sources */,
+				D7B6FC8518502928006E29DC /* AldHighscoreCell.m in Sources */,
 				D77D0DD5184A734C0000A354 /* AldWillOWispView.m in Sources */,
+				D7B6FC8818502BCD006E29DC /* AldHighscoreViewController.m in Sources */,
 				D73C3753184E834400D5D051 /* AldDataCore.m in Sources */,
 				D7C3B26418391A380013DD81 /* AldCardSideView.m in Sources */,
 				D77D0DCB184A5CAB0000A354 /* AldPortraitViewCell.m in Sources */,

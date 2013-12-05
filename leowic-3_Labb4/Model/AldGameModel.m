@@ -110,8 +110,8 @@
 {    
     // Calculate number of cards which will be in play. This is the square of the number of
     // cards per row.
-    _cardsLeftToFlip = _cardsPerRow * _cardsPerRow;
-    _pointMagnitude = _cardsLeftToFlip;
+    _cardsLeftToFlip = pow(_cardsPerRow, 2);
+    _pointMagnitude = pow(_cardsLeftToFlip, 2);
     
     // Declare a few utility variables.
     NSUInteger i, n, iterations, i0, i1;
@@ -335,7 +335,10 @@
     if (currentPlayer >= _players.count) {
         currentPlayer = 0;
         _rounds += 1;
-        _pointMagnitude -= 1;
+        
+        if (_pointMagnitude > 1) {
+            _pointMagnitude -= 1;
+        }
     }
     
     [self setCurrentPlayerIndex:currentPlayer];
@@ -474,7 +477,7 @@
     // The name is the key that will be used in the dictionary for the return value.
     [expressionDescription setName:@"maxScore"];
     [expressionDescription setExpression:maxExpression];
-    [expressionDescription setExpressionResultType:NSDateAttributeType];
+    [expressionDescription setExpressionResultType:NSInteger64AttributeType];
     
     // Set the request's properties to fetch just the property represented by the expressions.
     [request setPropertiesToFetch:[NSArray arrayWithObject:expressionDescription]];
@@ -516,7 +519,6 @@
     // Restore the cards (the "map")
     _cardsPerRow = [data.cardsPerRow unsignedIntegerValue];
     _cardsLeftToFlip = [data.cardsLeftToFlip unsignedIntegerValue];
-    _pointMagnitude = _cardsLeftToFlip - _rounds;
     _map = [[NSMutableArray alloc] initWithCapacity:_cardsPerRow * _cardsPerRow];
 
     // Fill the array with null, to be sure that the space is allocated
@@ -530,6 +532,12 @@
         cardData.collected = [cardEntity.collected boolValue];
         
         [_map replaceObjectAtIndex:[cardEntity.index unsignedIntegerValue] withObject:cardData];
+    }
+    
+    // restore the points rewarded next round
+    _pointMagnitude = pow(_cardsLeftToFlip, 2);
+    if (_rounds > _pointMagnitude) {
+        _pointMagnitude = 1;
     }
     
     // Restore the players
