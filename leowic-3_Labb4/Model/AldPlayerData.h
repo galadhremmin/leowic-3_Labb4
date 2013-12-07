@@ -11,10 +11,10 @@
 @interface AldPlayerData : NSObject
 
 @property(nonatomic)         NSUInteger  ID;
-@property(nonatomic)         NSUInteger  score;
+@property(nonatomic)         NSInteger   score;
 @property(strong, nonatomic) NSString   *portraitPath;
 
--(id)  initWithID: (NSUInteger)ID score: (NSUInteger)score portrait: (NSString *)portraitPath;
--(void) scorePoints: (NSUInteger)points;
+-(id)  initWithID: (NSUInteger)ID score: (NSInteger)score portrait: (NSString *)portraitPath;
+-(void) scorePoints: (NSInteger)points;
 
 @end

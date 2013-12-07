@@ -27,6 +27,7 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [NSFetchedResultsController deleteCacheWithName:@"HighscoreMaster"];
 }
 
 -(void) didReceiveMemoryWarning
@@ -39,13 +40,15 @@
 
 -(NSInteger) numberOfSectionsInTableView: (UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count];
+    NSInteger sectionCount = self.fetchedResultsController.sections.count;
+    return sectionCount;
 }
 
 -(NSInteger) tableView: (UITableView *)tableView numberOfRowsInSection: (NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    id <NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
+    NSInteger numberOfItems = [sectionInfo numberOfObjects];
+    return numberOfItems;
 }
 
 -(UITableViewCell *) tableView: (UITableView *)tableView cellForRowAtIndexPath: (NSIndexPath *)indexPath
@@ -65,39 +68,40 @@
     
     AldDataCore *core = [AldDataCore defaultCore];
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    
     // Edit the entity name as appropriate.
     NSEntityDescription *entity = [NSEntityDescription entityForName:kAldDataCoreHighscoreEntityName inManagedObjectContext:core.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    
+    fetchRequest.entity = entity;
     
     // Set the batch size to a suitable number.
-    [fetchRequest setFetchBatchSize:20];
+    fetchRequest.fetchBatchSize = 20;
     
     // Edit the sort key as appropriate.
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score" ascending:NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    
-    [fetchRequest setSortDescriptors:sortDescriptors];
+    fetchRequest.sortDescriptors = @[sortDescriptor];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:core.managedObjectContext sectionNameKeyPath:nil cacheName:@"Master"];
-    aFetchedResultsController.delegate = self;
-    self.fetchedResultsController = aFetchedResultsController;
+    NSFetchedResultsController *controller = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:core.managedObjectContext sectionNameKeyPath:nil cacheName:@"HighscoreMaster"];
+    controller.delegate = self;
+
+    _fetchedResultsController = controller;
     
 	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
+	if (![controller performFetch:&error]) {
         // Replace this implementation with code to handle the error appropriately.
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	    abort();
 	}
     
-    return _fetchedResultsController;
+    return controller;
 }
 
 -(void) controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView beginUpdates];
+    [(UITableView *)self.view beginUpdates];
 }
 
 -(void) controller:(NSFetchedResultsController *)controller didChangeSection: (id <NSFetchedResultsSectionInfo>)sectionInfo
@@ -105,11 +109,11 @@
 {
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [(UITableView *)self.view insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [(UITableView *)self.view deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -118,7 +122,7 @@
        atIndexPath: (NSIndexPath *)indexPath forChangeType: (NSFetchedResultsChangeType)type
       newIndexPath: (NSIndexPath *)newIndexPath
 {
-    UITableView *tableView = self.tableView;
+    UITableView *tableView = (UITableView *)self.view;
     
     switch(type) {
         case NSFetchedResultsChangeInsert:
@@ -142,7 +146,7 @@
 
 -(void) controllerDidChangeContent: (NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    [(UITableView *)self.view endUpdates];
 }
 
 -(void) configureCell: (AldHighscoreCell *)cell atIndexPath: (NSIndexPath *)indexPath

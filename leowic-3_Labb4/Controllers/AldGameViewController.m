@@ -113,7 +113,7 @@
     // the players. So create an instance of this class per active player.
     NSMutableArray *players = [[NSMutableArray alloc] initWithCapacity:_model.players.count];
     for (AldPlayerData *playerData in _model.players) {
-        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithID:playerData.ID portraitPath:playerData.portraitPath];
+        AldPlayerWrapper *wrapper = [[AldPlayerWrapper alloc] initWithID:playerData.ID portraitPath:playerData.portraitPath pointsLabel:[self valueForKeyPath:[NSString stringWithFormat:@"player%dPointsView", playerData.ID]]];
         
         [players addObject:wrapper];
     }
@@ -188,17 +188,22 @@
     // Lay out the player portraits
     //
     for (NSUInteger i = 0; i < 2; i += 1) {
+        
+        // Hack, hack, hack! Create a custom view instead?!
         UIImageView *portraitView = [self valueForKeyPath:[NSString stringWithFormat:@"player%dView", i + 1]];
         UIImageView *frameView = [self valueForKeyPath:[NSString stringWithFormat:@"player%dFrameView", i + 1]];
+        UILabel *pointsView = [self valueForKeyPath:[NSString stringWithFormat:@"player%dPointsView", i + 1]];
         
-        portraitView.hidden = frameView.hidden = i >= _players.count;
+        portraitView.hidden = frameView.hidden = pointsView.hidden = i >= _players.count;
         if (portraitView.hidden) {
             continue;
         }
 
         AldPlayerWrapper *wrapper = [_players objectAtIndex:i];
+        AldPlayerData *data = [_model.players objectAtIndex:wrapper.ID - 1];
         portraitView.image = [UIImage imageFromBundle:wrapper.portraitPath];
         wrapper.portraitView = portraitView;
+        wrapper.pointsLabel.text = [NSString stringWithFormat:@"%d", data.score];
         
         [UIView view:frameView shadowWithOffset:CGSizeMake(3, 3) radius:3];
     }
@@ -215,12 +220,20 @@
     _scrollView.delegate            = self;
     
     // Remove all other subviews and add the map view to the scroll view.
-    [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    if (_scrollView.subviews != nil && _scrollView.subviews.count > 0) {
+        [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    }
+    
     [_scrollView addSubview:mapView];
 }
 
 -(void) unload
 {
+    // Remove all views representing cards
+    if (_scrollView.subviews != nil && _scrollView.subviews.count > 0) {
+        [_scrollView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    }
+    
     _selectedCards = nil;
     _players = nil;
     _cards   = nil;
@@ -355,11 +368,19 @@
 -(void) playerMoveFeedback: (NSNumber *)isMatch
 {
     AldPlayerData *currentPlayer = [_model currentPlayer];
-    AldPlayerWrapper *portrait = [_players objectAtIndex:currentPlayer.ID - 1];
+    AldPlayerData *previousPlayer = [_model previousPlayer];
+    
+    AldPlayerWrapper *wrapper = [_players objectAtIndex:currentPlayer.ID - 1];
+    AldPlayerWrapper *previousWrapper = [_players objectAtIndex:previousPlayer.ID-1];
+    
+    // Update the score
+    previousWrapper.pointsLabel.text = [NSString stringWithFormat:@"%d", previousPlayer.score];
     
     if (_model.cardsLeftToFlip > 0) {
-        [_willOWisp moveToView:portrait.portraitView];
+        // Move the will o wisp
+        [_willOWisp moveToView:wrapper.portraitView];
     } else {
+        // Present the game over dialogue
         [self gameOver];
     }
     

@@ -19,6 +19,8 @@
 @property (weak, nonatomic)   IBOutlet UIImageView      *player2View;
 @property (weak, nonatomic)   IBOutlet UIImageView      *player1FrameView;
 @property (weak, nonatomic)   IBOutlet UIImageView      *player2FrameView;
+@property (weak, nonatomic)   IBOutlet UILabel          *player1PointsView;
+@property (weak, nonatomic)   IBOutlet UILabel          *player2PointsView;
 @property (weak, nonatomic)   IBOutlet AldWillOWispView *willOWisp;
 @property (strong, nonatomic)          AldGameModel     *model;
 @property (strong, nonatomic)          NSArray          *playerPortraitPaths;

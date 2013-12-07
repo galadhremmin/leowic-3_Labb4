@@ -12,8 +12,9 @@
 
 @property(nonatomic, strong) NSString    *portraitPath;
 @property(nonatomic, weak)   UIImageView *portraitView;
+@property(nonatomic, weak)   UILabel     *pointsLabel;
 @property(nonatomic)         NSUInteger   ID;
 
--(id) initWithID: (NSUInteger)ID portraitPath: (NSString *)portraitPath;
+-(id) initWithID: (NSUInteger)ID portraitPath: (NSString *)portraitPath pointsLabel: (UILabel *)label;
 
 @end

@@ -10,7 +10,7 @@
 
 @implementation AldPlayerData
 
--(id) initWithID: (NSUInteger)ID score: (NSUInteger)score portrait: (NSString *)portraitPath
+-(id) initWithID: (NSUInteger)ID score: (NSInteger)score portrait: (NSString *)portraitPath
 {
     self = [super init];
     if (self) {
@@ -21,10 +21,9 @@
     return self;
 }
 
--(void) scorePoints: (NSUInteger)points
+-(void) scorePoints: (NSInteger)points
 {
-    points += _score;
-    [self setScore: points];
+    _score = MAX(points + _score, 0);
 }
 
 @end

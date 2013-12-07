@@ -111,7 +111,7 @@
     // Calculate number of cards which will be in play. This is the square of the number of
     // cards per row.
     _cardsLeftToFlip = pow(_cardsPerRow, 2);
-    _pointMagnitude = pow(_cardsLeftToFlip, 2);
+    _pointMagnitude = pow(_cardsLeftToFlip, 2) * 0.5;
     
     // Declare a few utility variables.
     NSUInteger i, n, iterations, i0, i1;
@@ -128,12 +128,11 @@
     NSArray *tengwarSymbols = [self collectVariants:_cardsLeftToFlip * 0.5];
     
     // Adds the cards to the map sequentially, in the given order.
-    for (i = 0, n = 1; i < _cardsLeftToFlip; i += 1) {
-        AldCardData *cardData = [tengwarSymbols objectAtIndex:n - 1];
-        [_map insertObject:cardData atIndex:i];
-        
-        if (i > 0 && i % 2) {
-            n += 1;
+    for (i = 0, n = 0; i < _cardsLeftToFlip; n += 1) {
+        NSUInteger cards =i + kAldNumberOfSimultaneousCardSelections;
+        for (; i < cards; i += 1) {
+            AldCardData *cardData = [tengwarSymbols objectAtIndex:n];
+            [_map insertObject:cardData atIndex:i];
         }
     }
     
@@ -148,6 +147,21 @@
             [_map exchangeObjectAtIndex:i1 withObjectAtIndex:i0];
         }
     }
+    
+#if DEBUG
+    NSMutableString *row = [NSMutableString string];
+    i = 1;
+    for (AldCardData *card in _map) {
+        [row appendFormat:@"%@ ", card.title];
+        
+        if (i % _cardsPerRow == 0) {
+            NSLog(@"%@", row);
+            [row setString:@""];
+        }
+        i += 1;
+    }
+    
+#endif
     
     // Deassociate the model entity with the model, if there is one. This will force
     // the persist method to save a new instance of the game model, in contrast to
@@ -263,9 +277,10 @@
     }
     
     AldPlayerData *player = [self currentPlayer];
+    NSUInteger magnitude = _pointMagnitude * _players.count;
     
     if (matches) {
-        [player scorePoints:_pointMagnitude];
+        [player scorePoints:magnitude];
         _cardsLeftToFlip -= kAldNumberOfSimultaneousCardSelections;
         
         // Assign the collected state to the cards associated with this instruction
@@ -275,19 +290,8 @@
         }
         
     } else {
-        
-        NSUInteger newScore = player.score;
-        NSUInteger penalty = _pointMagnitude * 0.25; // Penalize 1/4 of the number of items
-        
-        // The score variables are unsigned, which is why this check is necessary to
-        // avoid integer overflow.
-        if (newScore < penalty) {
-            newScore = 0;
-        } else {
-            newScore -= penalty;
-        }
-        
-        [player scorePoints:newScore];
+        NSInteger penalty = magnitude * 0.25; // Penalize 1/4 of the number of items
+        [player scorePoints:-penalty];
     }
     
     [self switchPlayers];
@@ -305,7 +309,7 @@
         index -= 1;
     }
     
-    return [_players objectAtIndex:_currentPlayerIndex];
+    return [_players objectAtIndex:index];
 }
 
 -(AldPlayerData *) currentPlayer

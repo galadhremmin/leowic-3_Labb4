@@ -342,6 +342,20 @@
                                     <constraint firstAttribute="width" constant="40" id="F9E-JJ-poi"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QvM-PR-zo2">
+                                <rect key="frame" x="249" y="69" width="62" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Marion-Regular" family="Marion" pointSize="15"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OYd-ef-kWV">
+                                <rect key="frame" x="9" y="69" width="62" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Marion-Regular" family="Marion" pointSize="15"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.099888392857142905" green="0.0098803013716671165" blue="0.028425367236459633" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -359,8 +373,10 @@
                     <navigationItem key="navigationItem" id="b0z-6d-pMO"/>
                     <connections>
                         <outlet property="player1FrameView" destination="Wgo-A1-ksN" id="fEH-Se-13i"/>
+                        <outlet property="player1PointsView" destination="OYd-ef-kWV" id="0sa-cz-ehk"/>
                         <outlet property="player1View" destination="eM5-pf-dMj" id="k6f-Cx-koX"/>
                         <outlet property="player2FrameView" destination="kU6-tJ-eCA" id="82I-nc-iAH"/>
+                        <outlet property="player2PointsView" destination="QvM-PR-zo2" id="dhR-Sg-tGa"/>
                         <outlet property="player2View" destination="sZk-Pq-yHq" id="Rq6-AF-Pem"/>
                         <outlet property="scrollView" destination="ghQ-PZ-202" id="1dE-Dy-mFA"/>
                         <outlet property="view" destination="XzE-CY-WAP" id="mGD-PT-EvX"/>
