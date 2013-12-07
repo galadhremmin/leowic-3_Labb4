@@ -119,7 +119,6 @@
 		D78E4CC118467805006FDC8B /* AldPlayerWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPlayerWrapper.m; sourceTree = "<group>"; };
 		D78E4CC318468A8C006FDC8B /* AldPlayerData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldPlayerData.h; sourceTree = "<group>"; };
 		D78E4CC418468A8C006FDC8B /* AldPlayerData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldPlayerData.m; sourceTree = "<group>"; };
-		D78E4CC918468EE1006FDC8B /* AldJSONSerializable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AldJSONSerializable.h; sourceTree = "<group>"; };
 		D7B6FC8318502928006E29DC /* AldHighscoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreCell.h; sourceTree = "<group>"; };
 		D7B6FC8418502928006E29DC /* AldHighscoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AldHighscoreCell.m; sourceTree = "<group>"; };
 		D7B6FC8618502BCD006E29DC /* AldHighscoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AldHighscoreViewController.h; sourceTree = "<group>"; };
@@ -288,7 +287,6 @@
 			isa = PBXGroup;
 			children = (
 				D7D53EDA184E78B400D8DCF1 /* Core */,
-				D78E4CC918468EE1006FDC8B /* AldJSONSerializable.h */,
 				D78E4CC318468A8C006FDC8B /* AldPlayerData.h */,
 				D78E4CC418468A8C006FDC8B /* AldPlayerData.m */,
 				D7F3C9C81843A52E001A3152 /* AldCardData.h */,

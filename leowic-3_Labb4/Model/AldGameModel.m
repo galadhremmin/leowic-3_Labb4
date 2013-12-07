@@ -355,10 +355,10 @@
     BOOL isHighscore = NO;
     if (winningPlayer != nil) {
         isHighscore = [self isHighscore:winningPlayer.score];
-        if (isHighscore) {
-            // Create a highscore element
-            [self persistHighscore:winningPlayer.score forPlayerName:playerName];
-        }
+        
+        // Save a highscore record, regardless if it's a new highscore or not, as it might be interesting to see
+        // one's performance history regardless.
+        [self persistHighscore:winningPlayer.score forPlayerName:playerName];
     }
     
     // Clean up the database - this information is no longer required
